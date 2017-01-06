@@ -1,0 +1,29 @@
+{
+  "name": "art-gallery",
+  "version": "1.0.0",
+  "description": "For my graduation WORK",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gotjoy/Art-Gallery.git"
+  },
+  "keywords": [
+    "vue",
+    "mongodb",
+    "express",
+    "art",
+    "paint"
+  ],
+  "author": "1kg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gotjoy/Art-Gallery/issues"
+  },
+  "homepage": "https://github.com/Gotjoy/Art-Gallery#readme",
+  "dependencies": {
+    "mongoose": "^4.7.6"
+  }
+}
