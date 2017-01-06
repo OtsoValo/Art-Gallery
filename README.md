@@ -16,8 +16,6 @@
 -----
 
 西方20世纪美术史，艺术画廊(以下示例)<br/>
-<img src="./src/img/1288.jpg" alt="西方美术史20世纪" width=300>
-<img src="./src/img/1273.jpg" alt="西方美术史20世纪" width=300>
-<img src="./src/img/1207.jpg" alt="西方美术史20世纪" width=300>
-<img src="./src/img/1206.jpg" alt="西方美术史20世纪" width=300>
-<img src="./src/img/1077.jpg" alt="西方美术史20世纪" width=300>
+<img src="./src/img/1288.jpg" alt="西方美术史20世纪">
+<img src="./src/img/1273.jpg" alt="西方美术史20世纪">
+<img src="./src/img/1207.jpg" alt="西方美术史20世纪">
