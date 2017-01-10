@@ -10,12 +10,5 @@
 播放系统可以按用户的要求，按指定的顺序或方式播放用户选择的图像以及说明文字和解说
 
 #### 技术选型
-+ 后台采用 node.js + MongoDB
++ 后台采用 node.js + mongodb + mongoose
 + 前端采用 vue + three.js
-
------
-
-西方20世纪美术史，艺术画廊(以下示例)<br/>
-<img src="./src/img/1288.jpg" alt="西方美术史20世纪">
-<img src="./src/img/1273.jpg" alt="西方美术史20世纪">
-<img src="./src/img/1207.jpg" alt="西方美术史20世纪">
