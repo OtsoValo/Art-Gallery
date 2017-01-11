@@ -22,3 +22,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .test{
+    color: inherit;
+  }
+</style>

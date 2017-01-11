@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <img src="./assets/logo.png">
+        <img src="./assets/logo.jpg">
         <test></test>
     </div>
 </template>
@@ -22,7 +22,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
+    color: #404034;
     margin-top: 60px;
 }
 </style>
