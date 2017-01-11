@@ -5,12 +5,18 @@
   "author": "1kg",
   "private": true,
   "scripts": {
+    "start": "cd server && node app",
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "vue": "^2.1.0"
+    "express": "^4.14.0",
+    "mongoose": "^4.7.6",
+    "vue": "^2.1.0",
+    "vue-resource": "^1.0.3",
+    "vue-router": "^2.1.1",
+    "vuex": "^2.1.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",
