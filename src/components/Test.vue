@@ -12,15 +12,15 @@ export default {
     return {
       msg: 'Welcome to Art-Gallery App',
       msg2: '-- by 1kg --'
-    }
+    };
   },
   mounted () {
-    console.log('mounted')
+    console.log('mounted--mounted');
     this.$http.get('/api/hello').then((res) => {
-      this.msg2 = res.body
-    })
+      this.msg2 = res.body;
+    });
   }
-}
+};
 </script>
 
 <style>

@@ -18,7 +18,7 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 9009,
+    port: 9011,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
