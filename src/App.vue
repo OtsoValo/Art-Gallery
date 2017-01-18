@@ -53,7 +53,6 @@ ul{list-style: none}
   display: block;
   width: 20px;
   height: 20px;
-  /*overflow: hidden;*/
   border-radius: 50%;
   margin-left: 10px;
   cursor: pointer;

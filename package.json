@@ -8,8 +8,7 @@
     "server": "cd server && supervisor app.js",
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
-    "lint": "eslint --ext .js,.vue src",
-    "start": "npm run dev | npm run server"
+    "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
     "express": "^4.14.0",
