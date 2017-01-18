@@ -1,11 +1,13 @@
 <template>
     <div id="app">
         <ul class="ygj-menu">
-          <li class="route-active"><router-link to="/">舞台</router-link></li>
-          <li><router-link to="/left">左面板</router-link></li>
-          <li><router-link to="/right">右面板</router-link></li>
+          <li><router-link to="/"><a href="javascript:void(0);">舞台</a></router-link></li>
+          <li><router-link to="/left"><a href="javascript:void(0);">左幕布</a></router-link></li>
+          <li><router-link to="/right"><a href="javascript:void(0);">右幕布</a></router-link></li>
         </ul>
-        <router-view class="view"></router-view>
+        <transition name="fade">
+          <router-view></router-view>
+        </transition>
     </div>
 </template>
 
@@ -25,11 +27,19 @@ ul{list-style: none}
     width: 100%;
     height: 100%;
     font-family: 'Microsoft Yahei','arial','sans-serif';
+    font-weight: lighter;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #333;
     background-image: url(./assets/pattern/white-wood-min.jpg);
     background-repeat: repeat;
+}
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .3s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0
 }
 .ygj-menu{
   position: absolute;
@@ -43,10 +53,18 @@ ul{list-style: none}
   display: block;
   width: 20px;
   height: 20px;
-  overflow: hidden;
+  /*overflow: hidden;*/
   border-radius: 50%;
   margin-left: 10px;
   cursor: pointer;
+}
+.ygj-menu li a{
+  font-size: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  text-decoration: none;
 }
 .ygj-menu li:nth-child(1){
   background-color: #ff1e1e;

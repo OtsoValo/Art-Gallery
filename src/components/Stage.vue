@@ -1,7 +1,7 @@
 <template>
 	<div id="ygj-stage">
     <!--展示图片-->
-    <img class="img-frame" src="/api/masterpieces/?id=1300" alt="...">
+    <img class="img-frame" src="/api/masterpieces/?id=1119" alt="...">
 	</div>
 </template>
 
@@ -29,6 +29,7 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
+    max-height: 900px;
     transform: translate(-50%, -50%);
     box-shadow: 0px 0px 18px #333;
   }
