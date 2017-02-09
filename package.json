@@ -11,8 +11,10 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "cheerio": "^0.22.0",
     "express": "^4.14.0",
     "mysql": "^2.12.0",
+    "request": "^2.79.0",
     "vue": "^2.1.0",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.1.1",
