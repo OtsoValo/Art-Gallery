@@ -10,9 +10,12 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "bulma": "^0.3.1",
     "express": "^4.14.1",
+    "font-awesome": "^4.7.0",
     "mysql": "^2.13.0",
     "vue": "^2.1.10",
+    "vue-resource": "^1.2.0",
     "vue-router": "^2.2.0",
     "vuex": "^2.1.2"
   },

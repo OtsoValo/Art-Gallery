@@ -2,6 +2,8 @@
 const path = require('path');
 const express = require('express');
 const app = express();
+const mps = require('./serial');
+const smallmps = require('./smallmps');
 
 app.use(function (req, res, next) {
   res.set({
@@ -10,21 +12,30 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(express.static(path.resolve(__dirname, '/public')));
-
-app.get('/api/favicon.png', function (req, res) {
-  let faviconSrc = path.resolve(__dirname, 'public/img/favicon.png');
-  res.sendFile(faviconSrc);
-});
+// app.use(express.static(path.resolve(__dirname, '/public')));
 
 app.get('/api/hello', function (req, res) {
   res.send('GET request to say hi');
 });
 
-app.get('/api/masterpieces', function(req, res){
+app.get('/api/masterpiece', function(req, res){
   let imgName = req.query.id + '.jpg';
-  let imgSrc = path.resolve(__dirname, 'public/masterpieces/', imgName);
+  let imgSrc = path.resolve(__dirname, '../prepare/masterpieces/', imgName);
   res.sendFile(imgSrc);
+});
+
+app.get('/api/smallmps', function(req, res){
+  let imgName = req.query.id + '.jpg';
+  let imgSrc = path.resolve(__dirname, '../prepare/small_mps/', imgName);
+  res.sendFile(imgSrc);
+});
+
+app.get('/api/masterpieces', function(req, res){
+  res.json(mps);
+});
+
+app.get('/api/smallmpsList', function(req, res){
+  res.json(smallmps);
 });
 
 app.listen(9010, () => {
