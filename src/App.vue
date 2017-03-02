@@ -6,13 +6,13 @@
 </template>
 
 <script>
-  import NavBar from './views/NavBar'
+  import NavBar from './views/NavBar';
   export default {
     name: 'app',
     components: {
       NavBar
     }
-  }
+  };
 
 </script>
 

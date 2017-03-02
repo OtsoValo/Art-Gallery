@@ -14,6 +14,4 @@ while(cnt <= serial.end){
   });
   cnt++;
 }
-module.exports = {
-  smallmps
-}
+module.exports = smallmps;

@@ -1,87 +1,86 @@
 <template>
-  <div id="appMasterpieces">
-    <div class="columns is-multiline is-mobile">
-      <template v-for="smallmp in smallmps">
-        <div class="atx-container column is-2">
-          <div class="atx-mpbox">
-            <img class="atx-mp" :src="smallmp.url" alt="">
-          </div>
-        </div>
-      </template>
-      <!--<div class="mp-stage-mask">
-        <mp-card 
-          class="mp-stage"
-          :mpTitle="mpTitle"
-          :mpSubTitle="mpSubTitle"
-          :mpSrc="mpSrc"
-          :mpContent="mpContent">
-        </mp-card>
-      </div>-->
-    </div>
+  <div id="appMasterpieces" class="m-app-masterpieces">
+    <template v-for="smallmp in smallmps">
+      <div class="w-smallmp-box">
+        <img class="w-smallmp" :src="smallmp.url" alt="">
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-  import MpCard from '../components/MpCard'
+  const size = 8;
   export default {
     name: 'appMasterpieces',
     data: () => ({
-      smallmps: [],
-      mpTitle: '1kg',
-      mpSubTitle: 'A Front-End Coder',
-      mpSrc: '/api/masterpiece?id=1120',
-      mpArtist: '',
-      mpContent: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Phasellus nec iaculis mauris.`
+      totalCount: 0,
+      pageIndex: 0,
+      smallmps: []
     }),
     components: {
-      MpCard
+      // MpCard
+    },
+    methods: {
+      nextPage() {
+
+      },
+      prevPage() {
+
+      }
     },
     mounted() {
       let self = this;
-      this.$http.get('/api/smallmpsList').then(function (resp) {
-        self.smallmps = resp.data.smallmps;
-      })
+      this.$http.get('/api/smallmps/list', { params: { page: 0, size: 20 } }).then((resp) => {
+        self.smallmps = resp.data.listData;
+        self.totalCount = resp.data.totalCount;
+      });
     }
   }
 
 </script>
 
 <style scoped>
-  .atx-container {}
+  .m-app-masterpieces {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: auto;
+    overflow-x: hidden;
+    max-width: 1050px;
+    min-width: 630px;
+    margin: 10px auto;
+  }
   
-  .atx-mpbox {
+  .w-smallmp-box {
     position: relative;
-    width: 100%;
-    height: 240px;
+    box-sizing: border-box;
+    float: left;
+    width: 200px;
+    height: 200px;
+    margin-top: 10px;
     overflow: hidden;
+    background-color: #eee;
+    border-radius: 4px;
+    box-shadow: 2px 2px 6px #ddd;
   }
   
-  .atx-mp:hover {
-    cursor: pointer;
+  .w-smallmp-box:hover {
+    box-shadow: 4px 4px 12px #999;
   }
   
-  .atx-mp {
-    /*height: 100%;*/
+  .w-smallmp {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .mp-stage-mask {
-    position: fixed;
+    display: block;
     width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 9;
-    background-color: rgba(0, 0, 0, .6);
-  }
-  
-  .mp-stage {
-    position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+  }
+  
+  @media screen and (min-width: 720px) {
+    .w-smallmp-box {
+      /*width: 25%;*/
+    }
   }
 </style>

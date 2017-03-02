@@ -5,11 +5,48 @@
         <a class="nav-item">
           <img style="border-radius: 100%;" src="../assets/me.jpg" alt="Artoex logo">
         </a>
-        <a class="nav-item is-tab is-active">作品</a>
-        <a class="nav-item is-tab">画家</a>
-        <a class="nav-item is-tab">艺术流派</a>
-        <a class="nav-item is-tab">关于</a>
+        <a href="#/" class="nav-item is-tab" v-bind:class="{'is-active': isActive == 0}">首页</a>
+        <a href="#/masterpieces" class="nav-item is-tab" v-bind:class="{'is-active': isActive == 1}">作品</a>
+        <a href="#/artists" class=" nav-item is-tab" v-bind:class="{'is-active': isActive == 2}">画家</a>
+        <a href="#/styles" class=" nav-item is-tab" v-bind:class="{'is-active': isActive == 3}">艺术流派</a>
+        <a href="#/about" class="nav-item is-tab" v-bind:class="{'is-active': isActive == 4}">关于</a>
       </div>
     </div>
   </nav>
 </template>
+
+<script>
+  export default {
+    name: 'appNavbar',
+    data: () => ({
+      isActive: 0
+    }),
+    methods: {
+      activateNavbar() {
+        let activeHash = window.location.hash;
+        switch (activeHash) {
+          case '#/masterpieces':
+            this.isActive = 1;
+            break;
+          case '#/artists':
+            this.isActive = 2;
+            break;
+          case '#/styles':
+            this.isActive = 3;
+            break;
+          case '#/about':
+            this.isActive = 4;
+            break;
+          default:
+            this.isActive = 0;
+            break;
+        }
+      }
+    },
+    mounted() {
+      window.onhashchange = () => {
+        this.activateNavbar();
+      };
+    }
+  };
+</script>
