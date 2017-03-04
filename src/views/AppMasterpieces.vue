@@ -19,8 +19,7 @@
       totalCount: 0,
       pageSize: MPSLIST_SIZE,
       pageIndex: 0,
-      smallmps: [],
-      toggle: false
+      smallmps: []
     }),
     components: { Pagination },
     watch: {
@@ -30,12 +29,9 @@
         this.fetchMpsList(i);
       },
       fetchMpsList(page, size = MPSLIST_SIZE) {
-        this.toggle = false;
         this.$http.get('/api/smallmps/list', { params: { page: page, size: size } }).then((resp) => {
           this.smallmps = resp.data.listData;
           this.totalCount = resp.data.totalCount;
-          // 为了平滑的动画效果
-          this.toggle = true;
         });
       }
     },
@@ -47,33 +43,33 @@
 </script>
 
 <style scoped>
-  .smallmp-enter-active{
-    transition: all 1s;
+  .smallmp-enter-active {
+    position: absolute;
   }
-  .smallmp-enter,
+  .smallmp-enter {
+    transform: rotate(60deg) scale(0.6);
+    opacity: 0;
+  }
   .smallmp-leave-to {
-    transform: rotate(36deg) scale(0.5);
-    opacity: 0
+    display: none;
   }
-  .m-app-masterpieces > section{
-    display: flex;
-    display: -webkit-flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  .m-app-masterpieces > section {
+    display: block;
     height: auto;
-    overflow-x: hidden;
-    max-width: 1050px;
+    overflow: hidden;
+    max-width: 1100px;
     min-width: 630px;
     margin: 10px auto;
-    overflow: hidden;
   }
   .w-smallmp-box {
+    transition: all .6s;
     position: relative;
     box-sizing: border-box;
     float: left;
     width: 100px;
     height: 100px;
     margin-top: 10px;
+    margin-left: 10px;
     overflow: hidden;
     background-color: #e9e9e9;
     border-radius: 4px;
