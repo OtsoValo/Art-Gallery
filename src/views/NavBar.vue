@@ -44,6 +44,7 @@
       }
     },
     mounted() {
+      this.activateNavbar();
       window.onhashchange = () => {
         this.activateNavbar();
       };

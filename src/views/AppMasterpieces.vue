@@ -1,46 +1,61 @@
 <template>
   <div id="appMasterpieces" class="m-app-masterpieces">
-    <template v-for="smallmp in smallmps">
-      <div class="w-smallmp-box">
+    <transition-group name="smallmp" tag="section">
+      <div v-for="smallmp in smallmps" :key="smallmp" class="w-smallmp-box">
         <img class="w-smallmp" :src="smallmp.url" alt="">
       </div>
-    </template>
+    </transition-group>
+
+    <pagination :active-page="pageIndex" :total-count="totalCount" :page-size="pageSize" @paging="pagingRequest"></pagination>
   </div>
 </template>
 
 <script>
-  const size = 8;
+  import Pagination from '../components/Pagination';
+  const MPSLIST_SIZE = 50;
   export default {
     name: 'appMasterpieces',
     data: () => ({
       totalCount: 0,
+      pageSize: MPSLIST_SIZE,
       pageIndex: 0,
-      smallmps: []
+      smallmps: [],
+      toggle: false
     }),
-    components: {
-      // MpCard
+    components: { Pagination },
+    watch: {
     },
     methods: {
-      nextPage() {
-
+      pagingRequest(i) {
+        this.fetchMpsList(i);
       },
-      prevPage() {
-
+      fetchMpsList(page, size = MPSLIST_SIZE) {
+        this.toggle = false;
+        this.$http.get('/api/smallmps/list', { params: { page: page, size: size } }).then((resp) => {
+          this.smallmps = resp.data.listData;
+          this.totalCount = resp.data.totalCount;
+          // 为了平滑的动画效果
+          this.toggle = true;
+        });
       }
     },
     mounted() {
-      let self = this;
-      this.$http.get('/api/smallmps/list', { params: { page: 0, size: 20 } }).then((resp) => {
-        self.smallmps = resp.data.listData;
-        self.totalCount = resp.data.totalCount;
-      });
+      this.fetchMpsList(0);
     }
   }
 
 </script>
 
 <style scoped>
-  .m-app-masterpieces {
+  .smallmp-enter-active{
+    transition: all 1s;
+  }
+  .smallmp-enter,
+  .smallmp-leave-to {
+    transform: rotate(36deg) scale(0.5);
+    opacity: 0
+  }
+  .m-app-masterpieces > section{
     display: flex;
     display: -webkit-flex;
     flex-wrap: wrap;
@@ -50,25 +65,24 @@
     max-width: 1050px;
     min-width: 630px;
     margin: 10px auto;
+    overflow: hidden;
   }
-  
   .w-smallmp-box {
     position: relative;
     box-sizing: border-box;
     float: left;
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     margin-top: 10px;
     overflow: hidden;
-    background-color: #eee;
+    background-color: #e9e9e9;
     border-radius: 4px;
     box-shadow: 2px 2px 6px #ddd;
+    cursor: pointer;
   }
-  
   .w-smallmp-box:hover {
-    box-shadow: 4px 4px 12px #999;
+    box-shadow: 4px 4px 8px #999;
   }
-  
   .w-smallmp {
     position: absolute;
     display: block;
@@ -77,7 +91,6 @@
     top: 50%;
     transform: translate(-50%, -50%);
   }
-  
   @media screen and (min-width: 720px) {
     .w-smallmp-box {
       /*width: 25%;*/

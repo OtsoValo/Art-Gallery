@@ -20,20 +20,20 @@
 
 <style scoped>
   .m-app-index {
-    /*background: #72d0eb;*/
+    background: #121212;
   }
   /* ---- reset ---- */
   
   canvas {
     display: block;
     vertical-align: bottom;
+    margin: 0;
   }
-  /* ---- particles.js container ---- */
   
   #particles-js {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: #212121;
+    background-color: #121212;
   }
 </style>

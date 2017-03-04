@@ -38,13 +38,15 @@ app.get('/api/masterpiece/list', function (req, res) {
 });
 // 返回缩略图路径列表
 app.get('/api/smallmps/list', function (req, res) {
-  let size = req.query.size || 8;
-  let page = req.query.page || 0;
-  let slicePrev = page * size;
-  let sliceAft = (page + 1) * size;
+  let size = parseInt(req.query.size) || 8;
+  let page = parseInt(req.query.page) || 0;
+  let from = page * size;
+  let to = (page + 1) * size;
   res.json({
     totalCount: totalCount,
-    listData: smallmps.slice(slicePrev, sliceAft)
+    from: from,
+    to: to,
+    listData: smallmps.slice(from, to)
   });
 });
 
