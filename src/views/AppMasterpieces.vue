@@ -8,7 +8,7 @@
 
     <pagination :active-page="pageIndex" :total-count="totalCount" :page-size="pageSize" @paging="pagingRequest"></pagination>
 
-    <modal :isShow="isModalActive" @closing="closeModal"></modal>
+    <modal :isShow="isModalActive" @closing="closeModal" :displaySrc="modalImSrc"></modal>
   </div>
 </template>
 
@@ -24,18 +24,31 @@
       pageSize: MPSLIST_SIZE,
       pageIndex: 0,
       smallmps: [],
-      isModalActive: false
+      isModalActive: false,
+      modalImId: 1111
     }),
-    components: { Pagination, Modal},
+    computed: {
+      modalImSrc() {
+        return `/api/masterpiece?id=${this.modalImId}`;
+      }
+    },
+    components: { Pagination, Modal },
     watch: {
     },
     methods: {
-      showMpDetail(smallmp){
+      showMpDetail(smallmp) {
         this.isModalActive = true;
-        console.log(smallmp.id);
+        this.modalImId = smallmp.id;
       },
-      closeModal(){
+      closeModal() {
         this.isModalActive = false;
+      },
+      goLorR(isL) {
+        if (isL) {
+          --this.modalImId;
+        } else {
+          ++this.modalImId;
+        }
       },
       pagingRequest(i) {
         this.fetchMpsList(i);
@@ -49,6 +62,18 @@
     },
     mounted() {
       this.fetchMpsList(0);
+      document.onkeydown = (evt) => {
+        switch (evt.keyCode) {
+          case 37:
+            this.goLorR(true);
+            break;
+          case 39:
+            this.goLorR(false);
+            break;
+          default:
+            break;
+        }
+      };
     }
   }
 
@@ -58,15 +83,18 @@
   .smallmp-enter-active {
     position: absolute;
   }
+  
   .smallmp-enter {
     transform: rotate(60deg) scale(0.6);
     opacity: 0;
   }
-  .smallmp-leave-to{
+  
+  .smallmp-leave-to {
     transform: translateY(-800px) rotate(60deg) scale(0.1);
     opacity: 0;
   }
-  .m-app-masterpieces > section {
+  
+  .m-app-masterpieces>section {
     display: block;
     height: auto;
     overflow: hidden;
@@ -74,6 +102,7 @@
     min-width: 1100px;
     margin: 10px auto;
   }
+  
   .w-smallmp-box {
     transition: all .6s ease;
     position: relative;
@@ -89,9 +118,11 @@
     box-shadow: 2px 2px 6px #ddd;
     cursor: pointer;
   }
+  
   .w-smallmp-box:hover {
     box-shadow: 4px 4px 8px #999;
   }
+  
   .w-smallmp {
     position: absolute;
     display: block;
@@ -100,6 +131,7 @@
     top: 50%;
     transform: translate(-50%, -50%);
   }
+  
   @media screen and (min-width: 720px) {
     .w-smallmp-box {
       /*width: 25%;*/
