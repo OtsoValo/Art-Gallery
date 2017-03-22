@@ -2,20 +2,14 @@
 
 > A Graduation Vue project.
 
-## Build Setup
+## 基于互联网的图像演播系统的设计
 
-``` bash
-# install dependencies
-npm install
+#### 题目内容
 
-# serve with hot reload at localhost:8080
-npm run dev
+设计一个简单的数据库系统，存储图像（比如数码照片）的相关信息。再设计一个简单的播放系统，播放数据库中的图像以及说明文字和解说音频。
 
-# build for production with minification
-npm run build
+#### 题目要求
 
-# build for production and view the bundle analyzer report
-npm run build --report
-```
++ 数据库系统具有添加、保存、修改、删除等功能 ，以处理图像的相关信息，包括图像文件、图像文件名，以及说明文字、解说音频等。
++ 播放系统可以按用户的要求，按指定的顺序或方式播放用户选择的图像以及说明文字和解说
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

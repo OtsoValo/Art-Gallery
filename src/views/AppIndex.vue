@@ -5,10 +5,10 @@
       <div class="card">
         <div class="card-content">
           <p class="title">
-            小清新艺术展廊网站-Artoex
+            小清新艺术展廊网站 Artoex
           </p>
           <p class="subtitle">
-            由一个喜欢艺术的程序猿制作
+            by懒懒笨笨的程序猿小杰
           </p>
           <div class="content">
             欢迎光临此网站！该网站里有两百多幅世界著名画家的画。著名大师与艺术家在创作中奇迹般地展示了我们所有的印象、幻想、建筑景观、物体、风景等。可以说，任何画廊都能使观众充满高等艺术的神秘气息并能感觉到创造者独特的内心世界。
@@ -60,7 +60,7 @@
     width: 100%;
     height: 100%;
     top: 0;
-    background-color: #121212;
+    background-color: #fff;
   }
   
   .site-intro {
