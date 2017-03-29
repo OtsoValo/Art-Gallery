@@ -41,8 +41,6 @@
     },
     mounted() {
       this.isActive = this.isShow;
-      let reallyImage = document.querySelector("#reallyImage");
-      console.log(reallyImage.style.width, reallyImage.style.height);
     }
   };
 
