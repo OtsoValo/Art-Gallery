@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import AppIndex from 'views/AppIndex'
-import AppMasterpieces from 'views/AppMasterpieces'
-import AppAdmin from 'admin/AppAdmin';
+import AppPainting from '@/components/AppPainting'
+import AppArtist from '@/components/AppArtist'
+import AppStyle from '@/components/AppStyle'
 
 Vue.use(Router)
 
@@ -10,16 +10,16 @@ export default new Router({
 	routes: [
 		{
 			path: '/',
-			name: 'AppIndex',
-			component: AppIndex
+			redirect: '/painting'
 		}, {
-			path: '/masterpieces',
-			name: 'AppMasterpieces',
-			component: AppMasterpieces
+			path: '/painting',
+			component: AppPainting
 		}, {
-			path: '/admin',
-			name: 'AppAdmin',
-			component: AppAdmin
+			path: '/artist',
+			component: AppArtist
+		}, {
+			path: '/style',
+			component: AppStyle
 		}
 	]
 })

@@ -3,16 +3,19 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import VueResource from 'vue-resource'
-import 'font-awesome/css/font-awesome.css'
-import 'bulma/css/bulma.css'
+import iView from 'iview'
+import 'iview/dist/styles/iview.css' 
 
-Vue.use(VueResource)
+import lodash from 'lodash'
+
+Vue.config.productionTip = false
+
+Vue.use(iView)
 
 /* eslint-disable no-new */
 new Vue({
-	el: '#app',
-	router,
-	template: '<App/>',
-	components: { App }
+  el: '#app',
+  router,
+  template: '<App/>',
+  components: { App }
 })
