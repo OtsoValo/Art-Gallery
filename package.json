@@ -10,8 +10,9 @@
   },
   "dependencies": {
     "express": "^4.15.2",
-    "iview": "^2.0.0-rc.9",
     "lodash": "^4.17.4",
+    "mongoose": "^4.9.3",
+    "muse-ui": "^2.0.1",
     "vue": "^2.2.2",
     "vue-router": "^2.2.0"
   },
