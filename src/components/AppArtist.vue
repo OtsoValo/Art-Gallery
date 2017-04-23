@@ -101,7 +101,7 @@ export default {
 		transform: scale(1, 1);
 	}
 	50%{
-		transform: scale(.8, .8);
+		transform: scale(1.1, 1.1);
 	}
 	100%{
 		transform: scale(1, 1);
@@ -115,7 +115,6 @@ export default {
 		float: left;
 		width: 60px;
 		height: 60px;
-		box-shadow: 0 0 8px #888;
 		@include im;
 		&.u-active {
 			box-shadow: 0 0 12px #333;

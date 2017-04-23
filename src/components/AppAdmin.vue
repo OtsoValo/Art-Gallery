@@ -3,13 +3,14 @@
 		<Tabs class="m-admin"
 		      value="painting"
 		      type="card">
-			<Tab-pane label="绘画"
-			          name="painting"
+			<Tab-pane label="新增绘画"
+			          name="paintingNew"
 			          class="w-pane">
 				<Form :label-width="120"
 				      class="w-form">
 					<Form-item label="上传画作">
-						<Upload action="/view/fileUpload/painting" name="painting">
+						<Upload action="/view/fileUpload/painting"
+						        name="painting">
 							<Button type="ghost"
 							        icon="ios-cloud-upload-outline">上传文件</Button>
 						</Upload>
@@ -56,7 +57,9 @@
 						       v-model="painting.site"></Input>
 					</Form-item>
 					<Form-item>
-						<Button type="primary" size="large" @click="savePainting">存入画作</Button>
+						<Button type="primary"
+						        size="large"
+						        @click="savePainting">存入画作</Button>
 					</Form-item>
 				</Form>
 				<div class="w-display">
@@ -68,13 +71,14 @@
 				</div>
 			</Tab-pane>
 	
-			<Tab-pane label="艺术家"
-			          name="artist"
+			<Tab-pane label="新增艺术家"
+			          name="artistNew"
 			          class="w-pane">
 				<Form :label-width="120"
 				      class="w-form">
 					<Form-item label="上传艺术家肖像">
-						<Upload action="/view/fileUpload/artist" name="artist">
+						<Upload action="/view/fileUpload/artist"
+						        name="artist">
 							<Button type="ghost"
 							        icon="ios-cloud-upload-outline">上传文件</Button>
 						</Upload>
@@ -88,13 +92,13 @@
 						<Date-picker type="date"
 						             placement="bottom-start"
 						             placeholder="出生日期"
-									 format="出生于yyyy年MM月dd日"
+						             format="出生于yyyy年MM月dd日"
 						             v-model="artist.birth"
 						             style="width: 200px; display: inline-block;"></Date-picker>
 						<Date-picker type="date"
 						             placement="bottom-start"
 						             placeholder="逝世日期"
-									 format="逝世于yyyy年MM月dd日"
+						             format="逝世于yyyy年MM月dd日"
 						             v-model="artist.dead"
 						             style="width: 200px; display: inline-block;"></Date-picker>
 					</Form-item>
@@ -134,7 +138,9 @@
 						       v-model="artist.works"></Input>
 					</Form-item>
 					<Form-item>
-						<Button type="primary" size="large" @click="saveArtist">存入艺术家</Button>
+						<Button type="primary"
+						        size="large"
+						        @click="saveArtist">存入艺术家</Button>
 					</Form-item>
 				</Form>
 				<div class="w-display">
@@ -144,6 +150,16 @@
 					<img src=""
 					     alt="">
 				</div>
+			</Tab-pane>
+			<Tab-pane label="编辑绘画"
+			          name="paintingEdit"
+			          class="w-pane">
+	
+			</Tab-pane>
+			<Tab-pane label="编辑艺术家"
+			          name="artistEdit"
+			          class="w-pane">
+	
 			</Tab-pane>
 		</Tabs>
 	
@@ -194,11 +210,22 @@ export default {
 				desc: nodesc ? '' : '已经帮你增加了一个重要时期啦，接下来就交给你了，要负责任地填写好哦~'
 			});
 		},
-		savePainting(){
-
+		savePainting() {
+			let paintingData = _.cloneDeep(this.painting);
+			this.$http.post('/view/newPainting', paintingData).then(res => {
+				if (res.status >= 200 && res.status < 400) {
+					this.$Notice.success({ title: res.data.msg });
+				}
+			});
 		},
-		saveArtist(){
-
+		saveArtist() {
+			let artistData = _.cloneDeep(this.artist);
+			delete artistData.bigStoryNum;
+			this.$http.post('/view/newArtist', artistData).then(res => {
+				if (res.status >= 200 && res.status < 400) {
+					this.$Notice.success({ title: res.data.msg });
+				}
+			});
 		}
 	},
 	watch: {
@@ -223,7 +250,7 @@ export default {
 		// 初始化先预定三个重要时期
 		const numInit = this.artist.bigStoryNum / 10;
 		let i = 0;
-		while(i < numInit){
+		while (i < numInit) {
 			this.artist.bigStories.push({ time: '', content: '' });
 			i++;
 		}

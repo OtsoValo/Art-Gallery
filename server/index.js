@@ -134,18 +134,32 @@ function fileSave(dir) {
 
 }
 
-// 接收文件上传
+// 接收画作图片上传
 app.post('/view/fileUpload/painting', upload.single('painting'), (req, res) => {
 	res.json({
-		msg: '文件上传成功'
+		msg: '画作图片上传成功'
 	});
 });
 
-// 接收文件上传
+// 接收艺术家图片上传
 app.post('/view/fileUpload/artist', upload.single('artist'), (req, res) => {
 	res.json({
-		msg: '文件上传成功'
+		msg: '艺术家图片上传成功'
 	});
+});
+
+// 存入画作
+app.post('/view/newPainting', (req, res) => {
+	res.json({
+		msg: '存入画作成功'
+	});
+});
+
+// 存入艺术家
+app.post('/view/newArtist', (req, res) => {
+	res.json({
+		msg: '存入艺术家成功'
+	})
 });
 
 app.listen(9010, () => {
