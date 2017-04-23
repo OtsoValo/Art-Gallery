@@ -7,6 +7,12 @@ const UserSchema = mongoose.Schema({
 	pwd: String,
 	email: String
 })
+UserSchema.methods.findAllEmail = function (cb) {
+	return this.model('User').find({ email: this.email }, cb)
+}
+UserSchema.statics.findByAcc = function (account, cb) {
+	return this.find({ account: new RegExp(account, "i") }, cb)
+}
 
 const PaintingSchema = mongoose.Schema({
 	url: String,
