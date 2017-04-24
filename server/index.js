@@ -17,8 +17,8 @@ const storage = multer.diskStorage({
 		cb(null, uploadSavePath);
 	},
 	filename: function (req, file, cb) {
-		let affix = file.originalname.replace(/[\u4e00-\u9fa5]+/g,'').replace(/\w+\./g, '');
-		cb(null, `${file.fieldname}-${Date.now()}.${affix}`);
+		let affix = /\.[^\.]+$/.exec(file.originalname)[0];
+		cb(null, `${file.fieldname}-${Date.now()}${affix}`);
 	}
 });
 const upload = multer({ storage: storage });
@@ -130,22 +130,28 @@ app.get('/view/artists', (req, res) => {
 	res.json(['bjs', 'kdsj', 'mk', 'mds']);
 });
 
-function fileSave(dir) {
-
-}
-
 // 接收画作图片上传
 app.post('/view/fileUpload/painting', upload.single('painting'), (req, res) => {
+	const filename = req.file.filename;
 	res.json({
-		msg: '画作图片上传成功'
+		msg: '画作图片上传成功',
+		data: `/view/uploadImg?file=${filename}`
 	});
 });
 
 // 接收艺术家图片上传
 app.post('/view/fileUpload/artist', upload.single('artist'), (req, res) => {
+	const filename = req.file.filename;
 	res.json({
-		msg: '艺术家图片上传成功'
+		msg: '艺术家图片上传成功',
+		data: `/view/uploadImg?file=${filename}`
 	});
+});
+
+// 返回上传图片路径
+app.get('/view/uploadImg', (req, res) => {
+	const filename = req.query.file;
+	res.sendFile(path.resolve(__dirname, '../static/uploads/', filename));
 });
 
 // 存入画作

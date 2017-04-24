@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import iView from 'iview';
+import eventHub from './common/eventHub';
 import 'iview/dist/styles/iview.css'; 
 
 import lodash from 'lodash';
@@ -13,6 +14,7 @@ Vue.config.productionTip = false;
 
 Vue.use(iView);
 Vue.prototype.$http = axios;
+Vue.prototype.$hub = eventHub;
 
 /* eslint-disable no-new */
 new Vue({

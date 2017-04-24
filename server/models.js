@@ -1,32 +1,41 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
+// 暂不做用户登录权限
 const UserSchema = mongoose.Schema({
 	account: String,
 	gender: String,
 	age: Number,
 	pwd: String,
 	email: String
-})
-UserSchema.methods.findAllEmail = function (cb) {
-	return this.model('User').find({ email: this.email }, cb)
-}
-UserSchema.statics.findByAcc = function (account, cb) {
-	return this.find({ account: new RegExp(account, "i") }, cb)
-}
+});
 
-const PaintingSchema = mongoose.Schema({
-	url: String,
+// 艺术家
+const ArtistSchema = mongoose.Schema({
 	name: String,
-	artist: String,
+	im: String,
+	birth: Date,
+	death: Date,
+	intro: String,
+	bigStories: [
+		{ time: String, content: String }
+	],
+	// 该艺术家作品的id集合
+	works: Array
+});
+
+// 绘画
+const PaintingSchema = mongoose.Schema({
+	name: String,
+	im: String,
+	// 艺术家的id
+	aid: String,
 	size: {
 		width: Number,
 		height: Number,
 		rule: String
 	},
-	age: {
-		year: Number,
-		month: Number
-	},
+	begin: Date,
+	end: Date,
 	style: {
 		type: String,
 		default: '未知~'
@@ -38,11 +47,11 @@ const PaintingSchema = mongoose.Schema({
 	site: {
 		type: String,
 		default: '木有找到~'
-	},
-	comments: [{ body: String, date: Date, userId: String }]
+	}
 })
 
 module.exports = {
 	User: mongoose.model('User', UserSchema),
+	Artist: mongoose.model('Artist', ArtistSchema),
 	Painting: mongoose.model('Painting', PaintingSchema)
 }

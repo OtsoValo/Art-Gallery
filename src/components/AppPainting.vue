@@ -29,12 +29,13 @@
 			      show-total
 			      @on-change="changePage"></Page>
 		</section>
-
+	
 		<Back-top></Back-top>
 	</div>
 </template>
 
 <script>
+
 export default {
 	name: 'AppPainting',
 	data() {
@@ -104,7 +105,7 @@ export default {
 		margin: 8px;
 		border-radius: 8px;
 		background: #eee;
-		&:hover{
+		&:hover {
 			cursor: pointer;
 			box-shadow: 0 0 8px #888;
 		}

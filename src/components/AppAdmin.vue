@@ -3,13 +3,15 @@
 		<Tabs class="m-admin"
 		      value="painting"
 		      type="card">
-			<Tab-pane label="新增绘画"
+			<Tab-pane label="绘画"
+			          icon="plus"
 			          name="paintingNew"
 			          class="w-pane">
 				<Form :label-width="120"
 				      class="w-form">
 					<Form-item label="上传画作">
 						<Upload action="/view/fileUpload/painting"
+						        :on-success="uploadSuccP"
 						        name="painting">
 							<Button type="ghost"
 							        icon="ios-cloud-upload-outline">上传文件</Button>
@@ -24,6 +26,13 @@
 						<Input placeholder="请输入..."
 						       style="width: 400px"
 						       v-model="painting.author"></Input>
+					</Form-item>
+					<Form-item label="画作尺寸">
+						<Input-number v-model="painting.size.width"></Input-number> ×
+						<Input-number v-model="painting.size.height"></Input-number>
+						<Input placeholder="请输入标量单位..."
+						       style="width: 100px"
+						       v-model="painting.size.rule"></Input>
 					</Form-item>
 					<Form-item label="创作时间">
 						<Date-picker type="year"
@@ -49,7 +58,7 @@
 						       type="textarea"
 						       :rows="4"
 						       style="width: 800px"
-						       v-model="painting.intro"></Input>
+						       v-model="painting.descr"></Input>
 					</Form-item>
 					<Form-item label="馆藏地址">
 						<Input placeholder="请输入..."
@@ -65,19 +74,27 @@
 				<div class="w-display">
 					<Icon class="u-camera"
 					      type="image"
+					      v-show="painting.im === ''"
 					      size="40"></Icon>
-					<img src=""
-					     alt="">
+					<img :src="painting.im">
 				</div>
 			</Tab-pane>
+			<Tab-pane label="绘画"
+			          icon="edit"
+			          name="paintingEdit"
+			          class="w-pane">
 	
-			<Tab-pane label="新增艺术家"
+			</Tab-pane>
+	
+			<Tab-pane label="艺术家"
+			          icon="plus"
 			          name="artistNew"
 			          class="w-pane">
 				<Form :label-width="120"
 				      class="w-form">
 					<Form-item label="上传艺术家肖像">
 						<Upload action="/view/fileUpload/artist"
+						        :on-success="uploadSuccA"
 						        name="artist">
 							<Button type="ghost"
 							        icon="ios-cloud-upload-outline">上传文件</Button>
@@ -99,7 +116,7 @@
 						             placement="bottom-start"
 						             placeholder="逝世日期"
 						             format="逝世于yyyy年MM月dd日"
-						             v-model="artist.dead"
+						             v-model="artist.death"
 						             style="width: 200px; display: inline-block;"></Date-picker>
 					</Form-item>
 					<Form-item label="艺术家介绍">
@@ -146,17 +163,13 @@
 				<div class="w-display">
 					<Icon class="u-camera"
 					      type="image"
+					      v-show="artist.im === ''"
 					      size="40"></Icon>
-					<img src=""
-					     alt="">
+					<img :src="artist.im">
 				</div>
 			</Tab-pane>
-			<Tab-pane label="编辑绘画"
-			          name="paintingEdit"
-			          class="w-pane">
-	
-			</Tab-pane>
-			<Tab-pane label="编辑艺术家"
+			<Tab-pane label="艺术家"
+			          icon="edit"
 			          name="artistEdit"
 			          class="w-pane">
 	
@@ -176,17 +189,22 @@ export default {
 				name: '',
 				im: '',
 				author: '',
+				size: {
+					width: 0,
+					height: 0,
+					rule: ''
+				},
 				begin: '',
 				end: '',
 				style: '',
-				intro: '',
+				descr: '',
 				site: ''
 			},
 			artist: {
 				name: '',
 				im: '',
 				birth: '',
-				dead: '',
+				death: '',
 				intro: '',
 				bigStoryNum: 30,
 				bigStories: [],
@@ -209,6 +227,13 @@ export default {
 				title: '关于生平大事记',
 				desc: nodesc ? '' : '已经帮你增加了一个重要时期啦，接下来就交给你了，要负责任地填写好哦~'
 			});
+		},
+		uploadSuccP(res) {
+			console.log(res);
+			this.painting.im = res.data;
+		},
+		uploadSuccA(res) {
+			this.artist.im = res.data;
 		},
 		savePainting() {
 			let paintingData = _.cloneDeep(this.painting);
@@ -275,12 +300,21 @@ export default {
 		.w-display {
 			position: relative;
 			float: left;
-			min-width: 400px;
-			min-height: 400px;
-			padding: 20px;
-			border-radius: 8px;
+			width: 400px;
+			height: 400px;
+			border-radius: 4px;
 			border: 1px solid #ddd;
+			overflow: hidden;
 			background: url('../assets/geometry.png') repeat;
+			&>img {
+				display: block;
+				margin: 0;
+				left: 0;
+				position: absolute;
+				width: 100%;
+				top: 50%;
+				transform: translateY(-50%);
+			}
 			.u-camera {
 				position: absolute;
 				left: 50%;
