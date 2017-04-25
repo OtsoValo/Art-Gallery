@@ -4,6 +4,10 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 
+// 数据库处理
+const dbsv = require('./dbsv');
+const models = require('./models');
+
 const app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -163,8 +167,15 @@ app.post('/view/newPainting', (req, res) => {
 
 // 存入艺术家
 app.post('/view/newArtist', (req, res) => {
-	res.json({
-		msg: '存入艺术家成功'
+	const oneArtist = new models.Artist(req.body);
+	let tips = '~好像哪里出错了呜呜呜';
+	oneArtist.save((err, artist) => {
+		if (err) tips = '存入艺术家失败，请重试';
+		else tips = '哇！存入艺术家成功';
+		res.json({
+			msg: tips,
+			artist: artist
+		});
 	})
 });
 

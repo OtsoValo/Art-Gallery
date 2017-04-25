@@ -1,7 +1,7 @@
 <template>
 	<div class="app-admin">
 		<Tabs class="m-admin"
-		      value="painting"
+		      value="paintingNew"
 		      type="card">
 			<Tab-pane label="绘画"
 			          icon="plus"
@@ -30,7 +30,7 @@
 					<Form-item label="画作尺寸">
 						<Input-number v-model="painting.size.width"></Input-number> ×
 						<Input-number v-model="painting.size.height"></Input-number>
-						<Input placeholder="请输入标量单位..."
+						<Input placeholder="标量单位..."
 						       style="width: 100px"
 						       v-model="painting.size.rule"></Input>
 					</Form-item>
@@ -181,6 +181,7 @@
 </template>
 
 <script>
+import TIPS from '../common/TIPS.js';
 export default {
 	name: 'AppAdmin',
 	data() {
@@ -229,7 +230,6 @@ export default {
 			});
 		},
 		uploadSuccP(res) {
-			console.log(res);
 			this.painting.im = res.data;
 		},
 		uploadSuccA(res) {
@@ -240,15 +240,47 @@ export default {
 			this.$http.post('/view/newPainting', paintingData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
 					this.$Notice.success({ title: res.data.msg });
+					// 重置所有表单信息
+					this.painting = {
+						name: '',
+						im: '',
+						author: '',
+						size: {
+							width: 0,
+							height: 0,
+							rule: ''
+						},
+						begin: '',
+						end: '',
+						style: '',
+						descr: '',
+						site: ''
+					};
+				} else {
+					this.$Notice.warning({ title: TIPS.NET_ERR });
 				}
 			});
 		},
 		saveArtist() {
 			let artistData = _.cloneDeep(this.artist);
+			artistData.works = artistData.works.split(',');
 			delete artistData.bigStoryNum;
 			this.$http.post('/view/newArtist', artistData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
 					this.$Notice.success({ title: res.data.msg });
+					// 重置所有表单信息
+					this.artist = {
+						name: '',
+						im: '',
+						birth: '',
+						death: '',
+						intro: '',
+						bigStoryNum: 30,
+						bigStories: [],
+						works: ''
+					};
+				} else {
+					this.$Notice.warning({ title: TIPS.NET_ERR });
 				}
 			});
 		}
