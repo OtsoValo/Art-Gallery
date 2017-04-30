@@ -23,12 +23,17 @@ const ArtistSchema = mongoose.Schema({
 	works: Array
 });
 
+ArtistSchema.statics.findByName = function(name, cb){
+	return this.find({ name: new RegExp(name, 'ig')}, cb);
+};
+
 // 绘画
 const PaintingSchema = mongoose.Schema({
 	name: String,
 	im: String,
 	// 艺术家的id
 	aid: String,
+	author: String,
 	size: {
 		width: Number,
 		height: Number,

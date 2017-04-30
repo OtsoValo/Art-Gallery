@@ -23,9 +23,10 @@
 						       v-model="painting.name"></Input>
 					</Form-item>
 					<Form-item label="画作作者">
-						<Input placeholder="请输入..."
-						       style="width: 400px"
-						       v-model="painting.author"></Input>
+						<Radio-group v-model="painting.author">
+							<Radio v-for="(artist, index) in artists" :label="artist.name" :key="index"></Radio>
+						</Radio-group>
+						<span class="u-tips">（如若没有指定作者，请先添加该艺术家）</span>
 					</Form-item>
 					<Form-item label="画作尺寸">
 						<Input-number v-model="painting.size.width"></Input-number> ×
@@ -210,7 +211,8 @@ export default {
 				bigStoryNum: 30,
 				bigStories: [],
 				works: ''
-			}
+			},
+			artists: []
 		};
 	},
 	methods: {
@@ -237,6 +239,7 @@ export default {
 		},
 		savePainting() {
 			let paintingData = _.cloneDeep(this.painting);
+			paintingData.aid = (_.find(this.artists, a => {return a.name === paintingData.author;})).id;
 			this.$http.post('/view/newPainting', paintingData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
 					this.$Notice.success({ title: res.data.msg });
@@ -279,10 +282,19 @@ export default {
 						bigStories: [],
 						works: ''
 					};
+					this.genStories(3);
 				} else {
 					this.$Notice.warning({ title: TIPS.NET_ERR });
 				}
 			});
+		},
+		genStories(num) {
+			// 初始化先预定三个重要时期
+			let i = 0;
+			while (i < num) {
+				this.artist.bigStories.push({ time: '', content: '' });
+				i++;
+			}
 		}
 	},
 	watch: {
@@ -304,13 +316,10 @@ export default {
 		}
 	},
 	mounted() {
-		// 初始化先预定三个重要时期
-		const numInit = this.artist.bigStoryNum / 10;
-		let i = 0;
-		while (i < numInit) {
-			this.artist.bigStories.push({ time: '', content: '' });
-			i++;
-		}
+		this.genStories(this.artist.bigStoryNum / 10);
+		this.$http.get('/view/artists').then(res => {
+			this.artists = res.data.data;
+		});
 	}
 }
 </script>
@@ -322,6 +331,9 @@ export default {
 	max-width: 1400px;
 	min-width: 1400px;
 	margin: 20px auto;
+	.u-tips{
+		color: #bbb;
+	}
 	.w-pane {
 		padding: 20px 0;
 		.w-form {

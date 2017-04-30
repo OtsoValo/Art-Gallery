@@ -2,34 +2,34 @@
 	<div class="app-artist">
 		<header class="m-artist-list">
 			<div class="u-artist"
-			     v-for="im in imAry"
-			     :class="{'u-active': im === imActive}">
-				<img :src="im"
+			     v-for="ids in artistIds"
+			     :class="{'u-active': ids.id === artistId}">
+				<img :src="ids.im"
 				     alt="作家">
 			</div>
 		</header>
 		<div class="m-artist-detail">
 			<section class="w-im">
-				<img :src="im">
+				<img :src="artistData.im">
 			</section>
 			<div class="right-area">
 				<section class="w-intro">
-					<h2>{{info.name}}（{{info.life && info.life[0]}} - {{info.life && info.life[1]}}）</h2>
-					<p>{{info.intro}}</p>
+					<h2>{{artistData.name}}（{{artistData.birth | timeNormal}} - {{artistData.death | timeNormal}}）</h2>
+					<p>{{artistData.intro}}</p>
 				</section>
 	
 				<Timeline class="w-timeline">
-					<Timeline-item v-for="(timeline, index) in timelines"
+					<Timeline-item v-for="(story, index) in artistData.bigStories"
 					               :key="index">
-						<h4 class="time">{{timeline.time}}</h4>
-						<p class="content">{{timeline.content}}</p>
+						<h4 class="time">{{story.time}}</h4>
+						<p class="content">{{story.content}}</p>
 					</Timeline-item>
 				</Timeline>
 			</div>
 	
 			<section class="w-works">
 				<div class="u-work"
-				     v-for="work in works">
+				     v-for="work in artistData.works">
 					<img :src="work">
 				</div>
 			</section>
@@ -44,33 +44,25 @@ export default {
 	name: 'AppArtist',
 	data() {
 		return {
-			artists: [],
-			activeArtist: 'bjs',
-			im: '',
-			info: {},
-			timelines: [],
-			works: []
+			artistIds: [],
+			artistId: '',
+			artistData: {}
 		};
 	},
 	computed: {
-		imAry() {
-			return _.map(this.artists, artist => {
-				return `/view/artist?mark=${artist}`;
-			});
-		},
-		imActive() {
-			return `/view/artist?mark=${this.activeArtist}`;
+	},
+	filters: {
+		timeNormal(val){
+			return new Date(val).getFullYear();
 		}
 	},
 	mounted() {
 		this.$http.get('/view/artists').then(res => {
-			this.artists = res.data;
-			this.activeArtist = res.data[0];
-			this.$http.get(`/view/artistInfo?mark=${this.activeArtist}`).then(res => {
-				this.im = res.data.im;
-				this.info = res.data.info;
-				this.timelines = res.data.timelines;
-				this.works = res.data.works;
+			this.artistIds = res.data.data;
+			this.artistId = res.data.data[0].id;
+			this.$http.get(`/view/artistInfo?id=${this.artistId}`).then(res => {
+				this.$Notice.success({ title: res.data.msg });
+				this.artistData = res.data.data;
 			});
 		});
 	}
