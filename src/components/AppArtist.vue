@@ -3,7 +3,8 @@
 		<header class="m-artist-list">
 			<div class="u-artist"
 			     v-for="ids in artistIds"
-			     :class="{'u-active': ids.id === artistId}">
+			     :class="{'u-active': ids.id === artistId}"
+			     @click="choseArtist(ids)">
 				<img :src="ids.im"
 				     alt="作家">
 			</div>
@@ -28,13 +29,25 @@
 			</div>
 	
 			<section class="w-works">
-				<div class="u-work"
-				     v-for="work in artistData.works">
-					<img :src="work">
-				</div>
+				<Card style="width:600px">
+					<p slot="title">
+						<Icon type="ios-film-outline"></Icon>
+						经典作品
+					</p>
+					<ul>
+						<li v-for="(work, index) in artistData.works">
+							<Tag class="u-tag"
+							     type="dot">{{work}}</Tag>
+							<span class="u-stars">
+									<Icon type="ios-star" v-for="n in 4" :key="n"></Icon><Icon type="ios-star"></Icon>
+								</span>
+						</li>
+					</ul>
+				</Card>
+	
 			</section>
 		</div>
-		
+	
 		<Back-top></Back-top>
 	</div>
 </template>
@@ -52,8 +65,17 @@ export default {
 	computed: {
 	},
 	filters: {
-		timeNormal(val){
-			return new Date(val).getFullYear();
+		timeNormal(val) {
+			const dval = new Date(val);
+			return `${dval.getFullYear()}/${dval.getMonth() + 1}/${dval.getDate()}`;
+		}
+	},
+	methods: {
+		choseArtist(ids) {
+			this.artistId = ids.id;
+			this.$http.get(`/view/artistInfo?id=${this.artistId}`).then(res => {
+				this.artistData = res.data.data;
+			});
 		}
 	},
 	mounted() {
@@ -61,7 +83,6 @@ export default {
 			this.artistIds = res.data.data;
 			this.artistId = res.data.data[0].id;
 			this.$http.get(`/view/artistInfo?id=${this.artistId}`).then(res => {
-				this.$Notice.success({ title: res.data.msg });
 				this.artistData = res.data.data;
 			});
 		});
@@ -84,21 +105,24 @@ export default {
 		transform: translate(-50%, -50%);
 	}
 }
+
 @mixin maxmin {
 	max-width: 1400px;
 	min-width: 1400px;
 }
-@keyframes scaleQute{
-	0%{
+
+@keyframes scaleQute {
+	0% {
 		transform: scale(1, 1);
 	}
-	50%{
+	50% {
 		transform: scale(1.1, 1.1);
 	}
-	100%{
+	100% {
 		transform: scale(1, 1);
 	}
 }
+
 .m-artist-list {
 	@include maxmin;
 	margin: 20px auto 0;
@@ -150,15 +174,16 @@ export default {
 		@include maxmin;
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: center;
-		.u-work {
-			width: 100px;
-			height: 100px;
-			&:hover {
-				cursor: pointer;
-				box-shadow: 0 0 8px #888;
-			}
-			@include im;
+		justify-content: flex-start;
+		margin-left: 170px;
+		.u-tag {
+			max-width: 70%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.u-stars {
+			float: right;
+			margin-top: 8px;
 		}
 	}
 }

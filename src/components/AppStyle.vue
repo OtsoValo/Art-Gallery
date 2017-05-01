@@ -1,6 +1,6 @@
 <template>
 	<div class="app-style">
-		style
+		
 	</div>
 </template>
 

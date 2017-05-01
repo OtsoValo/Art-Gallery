@@ -4,6 +4,8 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 
+const _ = require('lodash');
+
 // 数据库处理
 const dbsv = require('./dbsv');
 const models = require('./models');
@@ -14,8 +16,11 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 let start = 1043;
 let end = 1300;
-let uploadIndex = 0;
-let tips = '好像哪里出错了~';
+
+const CODE = {
+	SUCCESS: 200,
+	ERROR: 500
+};
 const uploadSavePath = path.resolve(__dirname, '../static/uploads');
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -50,11 +55,21 @@ app.get('/view/painting', (req, res) => {
 // 轮播使用
 app.get('/view/paintingList', (req, res) => {
 	const size = req.query.size;
-	const ary = new Array(size);
-	for (let i = 0; i < size; i++) {
-		ary[i] = `/view/painting?id=${start + parseInt(Math.random() * 250)}`;
-	}
-	res.json(ary);
+	let ary = [];
+	models.Painting.find({}, function (err, paintings) {
+		if (err) {
+			res.json({
+				code: CODE.ERROR,
+				data: []
+			});
+			return;
+		}
+		ary = _.sampleSize(paintings, size);
+		res.json({
+			code: CODE.SUCCESS,
+			data: ary
+		});
+	})
 });
 
 // 缩略图使用
@@ -77,6 +92,13 @@ app.get('/view/thumbnailList', (req, res) => {
 app.get('/view/artists', (req, res) => {
 	const idImAry = [];
 	models.Artist.find({}, function (err, artists) {
+		if (err) {
+			res.json({
+				code: CODE.ERROR,
+				data: []
+			});
+			return;
+		}
 		artists.forEach(artist => {
 			idImAry.push({
 				name: artist.name,
@@ -85,7 +107,7 @@ app.get('/view/artists', (req, res) => {
 			});
 		});
 		res.json({
-			msg: '所有艺术家的id和图片地址',
+			code: CODE.SUCCESS,
 			data: idImAry
 		});
 	});
@@ -95,10 +117,12 @@ app.get('/view/artists', (req, res) => {
 app.get('/view/artistInfo', (req, res) => {
 	const id = req.query.id;
 	models.Artist.findById(id, function (err, artist) {
-		if (err) tips = '获取艺术家信息失败';
-		else tips = '获取艺术家信息成功了';
+		let code = CODE.SUCCESS;
+		if (err) {
+			code = CODE.ERROR
+		}
 		res.json({
-			msg: tips,
+			code: code,
 			data: artist
 		});
 	});
@@ -108,7 +132,7 @@ app.get('/view/artistInfo', (req, res) => {
 app.post('/view/fileUpload/painting', upload.single('painting'), (req, res) => {
 	const filename = req.file.filename;
 	res.json({
-		msg: '画作图片上传成功',
+		code: CODE.SUCCESS,
 		data: `/view/uploadImg?file=${filename}`
 	});
 });
@@ -117,7 +141,7 @@ app.post('/view/fileUpload/painting', upload.single('painting'), (req, res) => {
 app.post('/view/fileUpload/artist', upload.single('artist'), (req, res) => {
 	const filename = req.file.filename;
 	res.json({
-		msg: '艺术家图片上传成功',
+		code: CODE.SUCCESS,
 		data: `/view/uploadImg?file=${filename}`
 	});
 });
@@ -125,17 +149,23 @@ app.post('/view/fileUpload/artist', upload.single('artist'), (req, res) => {
 // 返回上传图片路径
 app.get('/view/uploadImg', (req, res) => {
 	const filename = req.query.file;
-	res.sendFile(path.resolve(__dirname, '../static/uploads/', filename));
+	let filepath = path.resolve(__dirname, '../static/uploads/', filename);
+	fs.access(filepath, err => {
+		if (err) { filepath = path.resolve(__dirname, '../static/backup/anonymous.jpg') };
+		res.sendFile(filepath);
+	});
 });
 
 // 存入画作
 app.post('/view/newPainting', (req, res) => {
 	const onePainting = new models.Painting(req.body);
 	onePainting.save((err, painting) => {
-		if (err) tips = '存入画作失败， 请重试';
-		else tips = '哇！存入画作成功';
+		let code = CODE.SUCCESS;
+		if (err) {
+			code = CODE.ERROR
+		}
 		res.json({
-			msg: tips,
+			code: code,
 			data: painting
 		});
 	});
@@ -145,10 +175,12 @@ app.post('/view/newPainting', (req, res) => {
 app.post('/view/newArtist', (req, res) => {
 	const oneArtist = new models.Artist(req.body);
 	oneArtist.save((err, artist) => {
-		if (err) tips = '存入艺术家失败，请重试';
-		else tips = '哇！存入艺术家成功';
+		let code = CODE.SUCCESS;
+		if (err) {
+			code = CODE.ERROR
+		}
 		res.json({
-			msg: tips,
+			code: code,
 			data: artist
 		});
 	})

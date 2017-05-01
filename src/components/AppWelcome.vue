@@ -1,6 +1,6 @@
 <template>
 	<div class="app-welcom">
-		welcome
+		
 	</div>
 </template>
 

@@ -1,11 +1,13 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import AppPainting from '@/components/AppPainting'
-import AppArtist from '@/components/AppArtist'
-import AppStyle from '@/components/AppStyle'
-import AppAdmin from '@/components/AppAdmin'
+import Vue from 'vue';
+import Router from 'vue-router';
+import AppPainting from '@/components/AppPainting';
+import AppArtist from '@/components/AppArtist';
+import NewArtist from '@/components/admin/NewArtist.vue';
+import NewPainting from '@/components/admin/NewPainting.vue';
+import EditArtist from '@/components/admin/EditArtist.vue';
+import EditPainting from '@/components/admin/EditPainting.vue';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
 	routes: [
@@ -19,11 +21,17 @@ export default new Router({
 			path: '/artist',
 			component: AppArtist
 		}, {
-			path: '/style',
-			component: AppStyle
+			path: '/newArtist',
+			component: NewArtist
 		}, {
-			path: '/admin',
-			component: AppAdmin
+			path: '/newPainting',
+			component: NewPainting
+		}, {
+			path: '/editArtist',
+			component: EditArtist
+		}, {
+			path: '/editPainting',
+			component: EditPainting
 		}
 	]
-})
+});

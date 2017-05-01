@@ -7,7 +7,7 @@
 				<template v-for="great in greatAry">
 					<Carousel-item>
 						<div class="w-great">
-							<img :src="great"
+							<img :src="great.im"
 							     alt="首焦图">
 						</div>
 					</Carousel-item>
@@ -41,7 +41,7 @@ export default {
 	data() {
 		return {
 			greatIndex: 0,
-			carouselSize: 5,
+			carouselSize: 3,
 			page: 1,
 			pageSize: 40,
 			totalSize: 0,
@@ -64,7 +64,7 @@ export default {
 	mounted() {
 		// 获取轮播首图
 		this.$http.get(`/view/paintingList?size=${this.carouselSize}`).then(res => {
-			this.greatAry = res.data;
+			this.greatAry = res.data.data;
 		});
 		this.changePage(this.page);
 	}

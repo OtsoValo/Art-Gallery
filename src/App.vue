@@ -4,12 +4,30 @@
 		      theme="light"
 		      :active-name="defaultLink"
 		      @on-select="routePage">
-			<template v-for="menu in menuAry">
-				<Menu-item :name="menu.link">
-					<Icon :type="menu.icon"></Icon>
-					{{menu.title}}
-				</Menu-item>
-			</template>
+			<Menu-item name="painting">
+				<Icon type="paintbrush"></Icon>
+				画廊
+			</Menu-item>
+			<Menu-item name="artist">
+				<Icon type="pizza"></Icon>
+				艺术家展厅
+			</Menu-item>
+			<Submenu name="admin">
+				<template slot="title">
+					<Icon type="settings"></Icon>
+					后台
+				</template>
+				<Menu-group title="增加处理">
+					<Menu-item name="newArtist">新增一个艺术家</Menu-item>
+					<Menu-item name="newPainting">新增一幅画作</Menu-item>
+				</Menu-group>
+				<Menu-group title="编辑更新">
+					<Menu-item name="editArtist">编辑某个艺术家</Menu-item>
+					<Menu-item name="editPainting">编辑某幅画作</Menu-item>
+				</Menu-group>
+			</Submenu>
+	
+			<div class="power-admin"></div>
 		</Menu>
 	
 		<div class="app-view">
@@ -22,13 +40,7 @@
 export default {
 	data() {
 		return {
-			defaultLink: 'painting',
-			menuAry: [
-				{ title: '绘画', link: 'painting', icon: 'paintbrush' },
-				{ title: '艺术家', link: 'artist', icon: 'ios-people' },
-				// { title: '风格', link: 'style', icon: 'pizza' },
-				{ title: '综合设置', link: 'admin', icon: 'settings' }
-			],
+			defaultLink: 'painting'
 		};
 	},
 	methods: {
@@ -42,3 +54,16 @@ export default {
 	}
 }
 </script>
+
+<style scoped lang="scss">
+#app {
+	.power-admin {
+		float: right;
+		width: 36px;
+		height: 36px;
+		margin: 12px;
+		background: url(./assets/favicon.png) no-repeat;
+		background-size: cover;
+	}
+}
+</style>
