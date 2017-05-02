@@ -16,16 +16,18 @@
 				       v-model="artist.name"></Input>
 			</Form-item>
 			<Form-item label="出生（逝世）日期">
-				<Date-picker type="date"
+				<Date-picker type="month"
 				             placement="bottom-start"
 				             placeholder="出生日期"
-				             format="出生于yyyy年MM月dd日"
+				             format="出生于yyyy年MM月"
+							 :editable="false"
 				             v-model="artist.birth"
 				             style="width: 200px; display: inline-block;"></Date-picker>
-				<Date-picker type="date"
+				<Date-picker type="month"
 				             placement="bottom-start"
 				             placeholder="逝世日期"
-				             format="逝世于yyyy年MM月dd日"
+				             format="逝世于yyyy年MM月"
+							 :editable="false"
 				             v-model="artist.death"
 				             style="width: 200px; display: inline-block;"></Date-picker>
 			</Form-item>
@@ -131,7 +133,7 @@ export default {
 		},
 		saveArtist() {
 			let artistData = _.cloneDeep(this.artist);
-			let comma = artistData.works.include(',') ? ',' : '，';
+			let comma = artistData.works.includes(',') ? ',' : '，';
 			artistData.works = artistData.works.split(comma);
 			delete artistData.bigStoryNum;
 			this.$http.post('/view/newArtist', artistData).then(res => {

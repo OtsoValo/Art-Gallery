@@ -5,7 +5,7 @@
 			     v-for="ids in artistIds"
 			     :class="{'u-active': ids.id === artistId}"
 			     @click="choseArtist(ids)">
-				<img :src="ids.im"
+				<img :src="ids.imMin"
 				     alt="作家">
 			</div>
 		</header>
@@ -67,7 +67,7 @@ export default {
 	filters: {
 		timeNormal(val) {
 			const dval = new Date(val);
-			return `${dval.getFullYear()}/${dval.getMonth() + 1}/${dval.getDate()}`;
+			return `${dval.getFullYear()}/${dval.getMonth() + 1}`;
 		}
 	},
 	methods: {

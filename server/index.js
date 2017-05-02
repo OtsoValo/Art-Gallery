@@ -103,7 +103,7 @@ app.get('/view/artists', (req, res) => {
 			idImAry.push({
 				name: artist.name,
 				id: artist._id,
-				im: artist.im
+				imMin: artist.imMin
 			});
 		});
 		res.json({

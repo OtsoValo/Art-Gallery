@@ -5,16 +5,24 @@
 		      :active-name="defaultLink"
 		      @on-select="routePage">
 			<Menu-item name="painting">
-				<Icon type="paintbrush"></Icon>
+				<Icon type="ios-color-filter"></Icon>
 				画廊
 			</Menu-item>
 			<Menu-item name="artist">
-				<Icon type="pizza"></Icon>
+				<Icon type="beer"></Icon>
 				艺术家展厅
+			</Menu-item>
+			<Menu-item name="style">
+				<Icon type="pizza"></Icon>
+				风格拼图
+			</Menu-item>
+			<Menu-item name="funny">
+				<Icon type="ios-infinite"></Icon>
+				无尽探索
 			</Menu-item>
 			<Submenu name="admin">
 				<template slot="title">
-					<Icon type="settings"></Icon>
+					<Icon type="ios-gear"></Icon>
 					后台
 				</template>
 				<Menu-group title="增加处理">

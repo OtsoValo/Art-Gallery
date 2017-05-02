@@ -17,11 +17,12 @@
 			</Form-item>
 			<Form-item label="画作作者">
 				<Radio-group v-model="painting.author">
-					<Radio v-for="(artist, index) in artists"
-					       :label="artist.name"
-					       :key="index"></Radio>
+					<Poptip trigger="hover" content="如若没有指定作者，请先添加该艺术家" placement="top">
+						<Radio v-for="(artist, index) in artists"
+						       :label="artist.name"
+						       :key="index"></Radio>
+					</Poptip >
 				</Radio-group>
-				<span class="u-tips">（如若没有指定作者，请先添加该艺术家）</span>
 			</Form-item>
 			<Form-item label="画作尺寸">
 				<Input-number v-model="painting.size.width"></Input-number> ×
@@ -35,12 +36,14 @@
 				             placement="bottom-start"
 				             placeholder="开始日期"
 				             format="开始于yyyy年"
+				             :editable="false"
 				             v-model="painting.begin"
 				             style="width: 200px; display: inline-block;"></Date-picker>
 				<Date-picker type="year"
 				             placement="bottom-start"
 				             placeholder="结束日期"
 				             format="结束于yyyy年"
+				             :editable="false"
 				             v-model="painting.end"
 				             style="width: 200px; display: inline-block;"></Date-picker>
 			</Form-item>
@@ -72,7 +75,8 @@
 			      type="image"
 			      v-show="painting.im === ''"
 			      size="40"></Icon>
-			<img :src="painting.im" v-show="painting.im">
+			<img :src="painting.im"
+			     v-show="painting.im">
 		</div>
 	</div>
 </template>
