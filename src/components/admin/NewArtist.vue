@@ -90,6 +90,7 @@ export default {
 			artist: {
 				name: '',
 				im: '',
+				imMin: '',
 				birth: '',
 				death: '',
 				intro: '',
@@ -112,6 +113,7 @@ export default {
 		uploadSucc(res) {
 			this.$Notice.success({ title: TIPS.UPLOAD_ARTIST_SUCC });
 			this.artist.im = res.data;
+			this.artist.imMin = res.minData;
 		},
 		plusNotice(nodesc) {
 			this.$Notice.success({
@@ -139,6 +141,7 @@ export default {
 					this.artist = {
 						name: '',
 						im: '',
+						imMin: '',
 						birth: '',
 						death: '',
 						intro: '',

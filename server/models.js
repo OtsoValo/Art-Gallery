@@ -13,6 +13,7 @@ const UserSchema = mongoose.Schema({
 const ArtistSchema = mongoose.Schema({
 	name: String,
 	im: String,
+	imMin: String,
 	birth: Date,
 	death: Date,
 	intro: String,
@@ -31,6 +32,7 @@ ArtistSchema.statics.findByName = function(name, cb){
 const PaintingSchema = mongoose.Schema({
 	name: String,
 	im: String,
+	imMin: String,
 	// 艺术家的id
 	aid: String,
 	author: String,

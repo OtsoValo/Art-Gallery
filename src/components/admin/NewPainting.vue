@@ -86,6 +86,7 @@ export default {
 			painting: {
 				name: '',
 				im: '',
+				imMin: '',
 				author: '',
 				size: {
 					width: 0,
@@ -105,6 +106,7 @@ export default {
 		uploadSucc(res) {
 			this.$Notice.success({ title: TIPS.UPLOAD_PAINTING_SUCC });
 			this.painting.im = res.data;
+			this.painting.imMin = res.minData;
 		},
 		savePainting() {
 			let paintingData = _.cloneDeep(this.painting);
@@ -116,6 +118,7 @@ export default {
 					this.painting = {
 						name: '',
 						im: '',
+						imMin: '',
 						author: '',
 						size: {
 							width: 0,

@@ -5,14 +5,14 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 
 const _ = require('lodash');
-
+const images = require('images');
 // 数据库处理
 const dbsv = require('./dbsv');
 const models = require('./models');
 
 const app = express();
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 let start = 1043;
 let end = 1300;
@@ -128,31 +128,43 @@ app.get('/view/artistInfo', (req, res) => {
 	});
 });
 
-// 接收画作图片上传
+// 接收画作图片上传并实现压缩制作缩略图
 app.post('/view/fileUpload/painting', upload.single('painting'), (req, res) => {
-	const filename = req.file.filename;
+	const fileName = req.file.filename;
+	const filePath = req.file.path;
+	const affix = /\.[^\.]+$/.exec(fileName)[0];
+	const timestamp = /\d+/ig.exec(fileName)[0];
+	const minFileName = `${req.file.fieldname}-${timestamp}-min${affix}`;
+	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), {quality: 50});
 	res.json({
 		code: CODE.SUCCESS,
-		data: `/view/uploadImg?file=${filename}`
+		data: `/view/uploadImg?file=${fileName}`,
+		minData: `/view/uploadImg?file=${minFileName}`
 	});
 });
 
-// 接收艺术家图片上传
+// 接收艺术家图片上传并实现压缩制作缩略图
 app.post('/view/fileUpload/artist', upload.single('artist'), (req, res) => {
-	const filename = req.file.filename;
+	const fileName = req.file.filename;
+	const filePath = req.file.path;
+	const affix = /\.[^\.]+$/.exec(fileName)[0];
+	const timestamp = /\d+/ig.exec(fileName)[0];
+	const minFileName = `${req.file.fieldname}-${timestamp}-min${affix}`;
+	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), {quality: 50});
 	res.json({
 		code: CODE.SUCCESS,
-		data: `/view/uploadImg?file=${filename}`
+		data: `/view/uploadImg?file=${fileName}`,
+		minData: `/view/uploadImg?file=${minFileName}`
 	});
 });
 
 // 返回上传图片路径
 app.get('/view/uploadImg', (req, res) => {
-	const filename = req.query.file;
-	let filepath = path.resolve(__dirname, '../static/uploads/', filename);
-	fs.access(filepath, err => {
-		if (err) { filepath = path.resolve(__dirname, '../static/backup/anonymous.jpg') };
-		res.sendFile(filepath);
+	const fileName = req.query.file;
+	let filePath = path.resolve(__dirname, '../static/uploads/', fileName);
+	fs.access(filePath, err => {
+		if (err) { filePath = path.resolve(__dirname, '../static/backup/anonymous.jpg') };
+		res.sendFile(filePath);
 	});
 });
 
