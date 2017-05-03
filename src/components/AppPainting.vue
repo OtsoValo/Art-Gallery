@@ -15,12 +15,14 @@
 			</Carousel>
 		</header>
 		<section class="m-stage">
-			<template v-for="thumb in thumbAry">
-				<div class="w-thumb">
-					<img :src="thumb"
+			<div class="w-thumb"
+			     v-for="thumb in thumbAry">
+				<!--<Tooltip content="Top Left 文字提示"
+				         placement="top-start">-->
+					<img class="u-thumbim" :src="thumb.imMin"
 					     alt="缩略图">
-				</div>
-			</template>
+				<!--</Tooltip>-->
+			</div>
 		</section>
 		<section class="m-paginbox">
 			<Page class="w-pagin"
@@ -41,7 +43,7 @@ export default {
 	data() {
 		return {
 			greatIndex: 0,
-			carouselSize: 3,
+			carouselSize: 5,
 			page: 1,
 			pageSize: 40,
 			totalSize: 0,
@@ -109,12 +111,16 @@ export default {
 			cursor: pointer;
 			box-shadow: 0 0 8px #888;
 		}
-		&>img {
+		.u-thumbim {
 			position: absolute;
-			height: 100%;
+			width: 100%;
 			left: 50%;
 			top: 50%;
 			transform: translate(-50%, -50%);
+			transition: width .5s ease;
+			&:hover{
+				width: 150%;
+			}
 		}
 	}
 }

@@ -56,7 +56,7 @@ app.get('/view/painting', (req, res) => {
 app.get('/view/paintingList', (req, res) => {
 	const size = req.query.size;
 	let ary = [];
-	models.Painting.find({}, function (err, paintings) {
+	models.Painting.find({}, (err, paintings) => {
 		if (err) {
 			res.json({
 				code: CODE.ERROR,
@@ -76,22 +76,21 @@ app.get('/view/paintingList', (req, res) => {
 app.get('/view/thumbnailList', (req, res) => {
 	const page = req.query.page;
 	const pageSize = req.query.pageSize;
-	const range = [(page - 1) * pageSize + start, page * pageSize + start];
-	const ary = [];
-	for (let i = range[0]; i < range[1]; i++) {
-		if (i > end) continue;
-		ary.push(`/view/thumbnail?id=${i}`);
-	}
-	res.json({
-		total: end - start,
-		data: ary
+	const range = [(page - 1) * pageSize, page * pageSize];
+	models.Painting.find({}, (err, paintings) => {
+		let total = paintings.length;
+		let rawAry = _.slice(paintings, range[0], range[1]);
+		res.json({
+			total: total,
+			data: rawAry
+		});
 	});
 });
 
 // 所有艺术家
 app.get('/view/artists', (req, res) => {
 	const idImAry = [];
-	models.Artist.find({}, function (err, artists) {
+	models.Artist.find({}, (err, artists) => {
 		if (err) {
 			res.json({
 				code: CODE.ERROR,
@@ -116,7 +115,7 @@ app.get('/view/artists', (req, res) => {
 // 某艺术家所有信息（先模拟假数据好了）
 app.get('/view/artistInfo', (req, res) => {
 	const id = req.query.id;
-	models.Artist.findById(id, function (err, artist) {
+	models.Artist.findById(id, (err, artist) => {
 		let code = CODE.SUCCESS;
 		if (err) {
 			code = CODE.ERROR
@@ -135,7 +134,7 @@ app.post('/view/fileUpload/painting', upload.single('painting'), (req, res) => {
 	const affix = /\.[^\.]+$/.exec(fileName)[0];
 	const timestamp = /\d+/ig.exec(fileName)[0];
 	const minFileName = `${req.file.fieldname}-${timestamp}-min${affix}`;
-	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), {quality: 50});
+	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), { quality: 50 });
 	res.json({
 		code: CODE.SUCCESS,
 		data: `/view/uploadImg?file=${fileName}`,
@@ -150,7 +149,7 @@ app.post('/view/fileUpload/artist', upload.single('artist'), (req, res) => {
 	const affix = /\.[^\.]+$/.exec(fileName)[0];
 	const timestamp = /\d+/ig.exec(fileName)[0];
 	const minFileName = `${req.file.fieldname}-${timestamp}-min${affix}`;
-	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), {quality: 50});
+	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), { quality: 50 });
 	res.json({
 		code: CODE.SUCCESS,
 		data: `/view/uploadImg?file=${fileName}`,
