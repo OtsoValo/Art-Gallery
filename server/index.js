@@ -112,7 +112,7 @@ app.get('/view/artists', (req, res) => {
 	});
 });
 
-// 某艺术家所有信息（先模拟假数据好了）
+// 某艺术家所有信息
 app.get('/view/artistInfo', (req, res) => {
 	const id = req.query.id;
 	models.Artist.findById(id, (err, artist) => {

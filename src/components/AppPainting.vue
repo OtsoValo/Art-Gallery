@@ -16,12 +16,11 @@
 		</header>
 		<section class="m-stage">
 			<div class="w-thumb"
-			     v-for="thumb in thumbAry">
-				<!--<Tooltip content="Top Left 文字提示"
-				         placement="top-start">-->
-					<img class="u-thumbim" :src="thumb.imMin"
-					     alt="缩略图">
-				<!--</Tooltip>-->
+			     v-for="thumb in thumbAry"
+			     @click="seeThumb(thumb)">
+				<img class="u-thumbim"
+				     :src="thumb.imMin"
+				     alt="缩略图">
 			</div>
 		</section>
 		<section class="m-paginbox">
@@ -31,7 +30,74 @@
 			      show-total
 			      @on-change="changePage"></Page>
 		</section>
-	
+		<Modal v-model="paintingModal"
+		       class="w-modal"
+		       :width="modalWidth"
+		       :styles="{top: '20px'}">
+			<p slot="header"
+			   style="color:#666; text-align:center; font-size:20px; line-height: 1;">
+				<span>{{modalData.name}}</span>
+			</p>
+			<div style="text-align:center">
+				<img id="modal-im"
+				     :src="modalData.im"
+				     :alt="modalData.name">
+				<Row class="modal-intro">
+					<Col span="4">
+					<Tag type="border"
+					     color="blue">画作名称</Tag>
+					</Col>
+					<Col span="20"><p class="u-intro">{{modalData.name}}</p></Col>
+				</Row>
+				<Row class="modal-intro">
+					<Col span="4">
+					<Tag type="border"
+					     color="blue">画作作者</Tag>
+					</Col>
+					<Col span="20"><p class="u-intro"><Badge dot><a href="#">{{modalData.author}}</a></Badge></p></Col>
+				</Row>
+				<Row class="modal-intro">
+					<Col span="4">
+					<Tag type="border"
+					     color="blue">画作创作年份</Tag>
+					</Col>
+					<Col span="20"><p class="u-intro">{{modalData.begin | timeNormal}} - {{modalData.end | timeNormal}}</p></Col>
+				</Row>
+				<Row class="modal-intro">
+					<Col span="4">
+					<Tag type="border"
+					     color="blue">创作风格</Tag>
+					</Col>
+					<Col span="20"><p class="u-intro">{{modalData.style}}</p></Col>
+				</Row>
+				<Row class="modal-intro">
+					<Col span="4">
+					<Tag type="border"
+					     color="blue">尺寸</Tag>
+					</Col>
+					<Col span="20"><p class="u-intro">{{modalData.size.width}} × {{modalData.size.height}} {{modalData.size.rule}}</p></Col>
+				</Row>
+				<Row class="modal-intro">
+					<Col span="4">
+					<Tag type="border"
+					     color="blue">画作介绍</Tag>
+					</Col>
+					<Col span="20"><p class="u-intro"  v-for="descr in modalData.descr.split('\n')">{{descr}}</p></Col>
+				</Row>
+				<Row class="modal-intro">
+					<Col span="4">
+					<Tag type="border"
+					     color="blue">藏馆或收藏地址</Tag>
+					</Col>
+					<Col span="20"><p class="u-intro">{{modalData.site}}</p></Col>
+				</Row>
+			</div>
+			<div slot="footer">
+				<Button type="ghost"
+				        size="large"
+				        long>更改画作信息</Button>
+			</div>
+		</Modal>
 		<Back-top></Back-top>
 	</div>
 </template>
@@ -48,10 +114,17 @@ export default {
 			pageSize: 40,
 			totalSize: 0,
 			greatAry: [],
-			thumbAry: []
+			thumbAry: [],
+			paintingModal: false,
+			modalData: {},
+			modalWidth: 1200
 		};
 	},
-	computed: {
+	filters: {
+		timeNormal(val) {
+			const dval = new Date(val);
+			return `${dval.getFullYear()}`;
+		}
 	},
 	methods: {
 		changePage(page) {
@@ -60,6 +133,15 @@ export default {
 			this.$http.get(`/view/thumbnailList?page=${page}&pageSize=${this.pageSize}`).then(res => {
 				this.totalSize = res.data.total;
 				this.thumbAry = res.data.data;
+			});
+		},
+		seeThumb(thumb) {
+			this.paintingModal = true;
+			this.modalData = thumb;
+			this.$nextTick(() => {
+				const modalIm = document.getElementById('modal-im');
+				const outerWidth = 40;
+				this.modalWidth = modalIm.width + outerWidth;
 			});
 		}
 	},
@@ -118,7 +200,7 @@ export default {
 			top: 50%;
 			transform: translate(-50%, -50%);
 			transition: width .5s ease;
-			&:hover{
+			&:hover {
 				width: 150%;
 			}
 		}
@@ -135,6 +217,16 @@ export default {
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
+	}
+}
+
+.w-modal {
+	.modal-intro {
+		margin: 10px;
+		text-align: left;
+		.u-intro {
+			margin-top: 5px;
+		}
 	}
 }
 </style>

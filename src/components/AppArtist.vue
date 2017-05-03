@@ -23,7 +23,7 @@
 					<Timeline-item v-for="(story, index) in artistData.bigStories"
 					               :key="index">
 						<h4 class="time">{{story.time}}</h4>
-						<p class="content">{{story.content}}</p>
+						<p class="content" v-for="cont in story.content.split('\n')">{{cont}}</p>
 					</Timeline-item>
 				</Timeline>
 			</div>
