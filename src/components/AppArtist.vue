@@ -4,14 +4,18 @@
 			<div class="u-artist"
 			     v-for="ids in artistIds"
 			     :class="{'u-active': ids.id === artistId}"
-			     @click="choseArtist(ids)">
+			     @click="choseArtist(ids.id)">
 				<img :src="ids.imMin"
 				     alt="作家">
 			</div>
 		</header>
 		<div class="m-artist-detail">
-			<section class="w-im">
-				<img :src="artistData.im">
+			<section class="left-area">
+				<figure class="w-im">
+					<img :src="artistData.im">
+				</figure>
+				<Button class="w-modify" icon="edit">修改艺术家信息</Button>
+				<Button class="w-modify" type="error" icon="trash-a">删除该艺术家</Button>
 			</section>
 			<div class="right-area">
 				<section class="w-intro">
@@ -23,28 +27,28 @@
 					<Timeline-item v-for="(story, index) in artistData.bigStories"
 					               :key="index">
 						<h4 class="time">{{story.time}}</h4>
-						<p class="content" v-for="cont in story.content.split('\n')">{{cont}}</p>
+						<p class="content"
+						   v-for="cont in story.content.split('\n')">{{cont}}</p>
 					</Timeline-item>
 				</Timeline>
 			</div>
 	
 			<section class="w-works">
-				<Card style="width:600px">
+				<Card style="width:1200px">
 					<p slot="title">
 						<Icon type="ios-film-outline"></Icon>
 						经典作品
 					</p>
 					<ul>
-						<li v-for="(work, index) in artistData.works">
+						<li class="w-workline" v-for="(work, index) in artistData.works">
 							<Tag class="u-tag"
 							     type="dot">{{work}}</Tag>
 							<span class="u-stars">
-									<Icon type="ios-star" v-for="n in 4" :key="n"></Icon><Icon type="ios-star"></Icon>
-								</span>
+								<Icon type="ios-star" v-for="n in 4" :key="n"></Icon><Icon type="ios-star"></Icon>
+							</span>
 						</li>
 					</ul>
 				</Card>
-	
 			</section>
 		</div>
 	
@@ -70,9 +74,20 @@ export default {
 			return `${dval.getFullYear()}/${dval.getMonth() + 1}`;
 		}
 	},
+	watch: {
+		'$route': 'routeArtist'
+	},
 	methods: {
-		choseArtist(ids) {
-			this.artistId = ids.id;
+		// 用于从其他页面指定路由跳转过来相应艺术家
+		routeArtist() {
+			const aid = this.$route.query.aid;
+			if (aid !== this.artistId) {
+				this.choseArtist(aid);
+			}
+		},
+		choseArtist(aid) {
+			this.artistId = aid;
+			this.$router.push({ query: { aid: this.artistId } });
 			this.$http.get(`/view/artistInfo?id=${this.artistId}`).then(res => {
 				this.artistData = res.data.data;
 			});
@@ -81,7 +96,13 @@ export default {
 	mounted() {
 		this.$http.get('/view/artists').then(res => {
 			this.artistIds = res.data.data;
-			this.artistId = res.data.data[0].id;
+			let aid = this.$route.query.aid;
+			if (aid) {
+				this.artistId = aid;
+			} else {
+				this.artistId = res.data.data[0].id;
+				this.$router.push({ query: { aid: this.artistId } });
+			}
 			this.$http.get(`/view/artistInfo?id=${this.artistId}`).then(res => {
 				this.artistData = res.data.data;
 			});
@@ -145,20 +166,29 @@ export default {
 .m-artist-detail {
 	@include maxmin;
 	margin: 20px auto;
-	.w-im {
+	.left-area {
 		float: left;
-		display: inline-block;
-		width: 150px;
-		height: 150px;
+		display: block;
+		max-width: 150px;
 		margin-right: 20px;
-		background: #eee;
-		border-radius: 8px;
-		overflow: hidden;
-		&>img {
-			display: block;
+		text-align: center;
+		.w-im {
+			width: 150px;
+			height: 150px;
+			background: #eee;
+			border-radius: 8px;
+			overflow: hidden;
+			&>img {
+				display: block;
+				width: 100%;
+			}
+		}
+		.w-modify{
 			width: 100%;
+			margin-top: 10px;
 		}
 	}
+
 	.right-area {
 		max-width: 1200px;
 		float: left;
@@ -175,15 +205,22 @@ export default {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: flex-start;
-		margin-left: 170px;
-		.u-tag {
-			max-width: 70%;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		.u-stars {
-			float: right;
-			margin-top: 8px;
+		padding-left: 170px;
+		.w-workline{
+			padding: 4px;
+			transition: background .8s ease;
+			.u-tag {
+				max-width: 70%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.u-stars {
+				float: right;
+				margin-top: 8px;
+			}
+			&:hover{
+				background: #f9f9f9;
+			}
 		}
 	}
 }

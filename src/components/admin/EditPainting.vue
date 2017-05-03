@@ -1,6 +1,6 @@
 <template>
 	<div class="admin-edit-painting">
-		EditPainting
+		
 	</div>
 </template>
 

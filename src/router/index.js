@@ -13,24 +13,31 @@ export default new Router({
 	routes: [
 		{
 			path: '/',
+			name: 'AppIndex',
 			redirect: '/painting'
 		}, {
 			path: '/painting',
+			name: 'AppPainting',
 			component: AppPainting
 		}, {
 			path: '/artist',
+			name: 'AppArtist',
 			component: AppArtist
 		}, {
 			path: '/newArtist',
+			name: 'NewArtist',
 			component: NewArtist
 		}, {
 			path: '/newPainting',
+			name: 'NewPainting',
 			component: NewPainting
 		}, {
 			path: '/editArtist',
+			name: 'EditArtist',
 			component: EditArtist
 		}, {
 			path: '/editPainting',
+			name: 'EditPainting',
 			component: EditPainting
 		}
 	]

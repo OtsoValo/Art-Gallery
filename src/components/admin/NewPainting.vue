@@ -64,6 +64,14 @@
 				       style="width: 400px"
 				       v-model="painting.site"></Input>
 			</Form-item>
+			<Form-item label="生成语音速度">
+				<Slider v-model="painting.voiceSpeed"
+				        :step="10"
+						:min="10"
+						:max="90"
+				        show-stops
+				        :tip-format="formatVoice"></Slider>
+			</Form-item>
 			<Form-item>
 				<Button type="primary"
 				        size="large"
@@ -101,12 +109,16 @@ export default {
 				end: '',
 				style: '',
 				descr: '',
-				site: ''
+				site: '',
+				voiceSpeed: 20
 			},
 			artists: []
 		};
 	},
 	methods: {
+		formatVoice(val) {
+			return `语速 ${val / 10}`;
+		},
 		uploadSucc(res) {
 			this.$Notice.success({ title: TIPS.UPLOAD_PAINTING_SUCC });
 			this.painting.im = res.data;

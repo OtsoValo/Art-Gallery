@@ -9,18 +9,18 @@ const images = require('images');
 // 数据库处理
 const dbsv = require('./dbsv');
 const models = require('./models');
+const generateVoice = require('./voiceFactory');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-let start = 1043;
-let end = 1300;
-
 const CODE = {
 	SUCCESS: 200,
 	ERROR: 500
 };
+const MIN_QUAL = 60;
+
 const uploadSavePath = path.resolve(__dirname, '../static/uploads');
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -134,7 +134,7 @@ app.post('/view/fileUpload/painting', upload.single('painting'), (req, res) => {
 	const affix = /\.[^\.]+$/.exec(fileName)[0];
 	const timestamp = /\d+/ig.exec(fileName)[0];
 	const minFileName = `${req.file.fieldname}-${timestamp}-min${affix}`;
-	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), { quality: 50 });
+	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), { quality: MIN_QUAL });
 	res.json({
 		code: CODE.SUCCESS,
 		data: `/view/uploadImg?file=${fileName}`,
@@ -149,7 +149,7 @@ app.post('/view/fileUpload/artist', upload.single('artist'), (req, res) => {
 	const affix = /\.[^\.]+$/.exec(fileName)[0];
 	const timestamp = /\d+/ig.exec(fileName)[0];
 	const minFileName = `${req.file.fieldname}-${timestamp}-min${affix}`;
-	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), { quality: 50 });
+	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), { quality: MIN_QUAL });
 	res.json({
 		code: CODE.SUCCESS,
 		data: `/view/uploadImg?file=${fileName}`,

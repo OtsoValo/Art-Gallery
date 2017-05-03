@@ -20,7 +20,7 @@
 				<Icon type="ios-infinite"></Icon>
 				无尽探索
 			</Menu-item>
-			<Submenu name="admin">
+			<Submenu name="admin" style="z-index: 9999;">
 				<template slot="title">
 					<Icon type="ios-gear"></Icon>
 					后台
@@ -54,7 +54,13 @@ export default {
 	methods: {
 		routePage(name) {
 			this.$router.push({ path: name });
+		},
+		changeMenu(){
+			this.defaultLink = 	this.$route.path;
 		}
+	},
+	watch: {
+		'$route': 'changeMenu'
 	},
 	mounted() {
 		const curPath = this.$route.path;
