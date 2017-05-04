@@ -68,13 +68,6 @@ export default {
 	mounted() {
 		const curPath = this.$route.path;
 		this.defaultLink = curPath.split('/')[1];
-		this.$router.beforeEach((to, from, next) => {
-			if (to.matched.length === 0) {
-				next({ path: '/404notfound' });
-			} else {
-				next();
-			}
-		});
 	}
 }
 </script>
