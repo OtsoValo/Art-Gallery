@@ -14,8 +14,8 @@
 				<figure class="w-im">
 					<img :src="artistData.im">
 				</figure>
-				<Button class="w-modify" icon="edit">修改艺术家信息</Button>
-				<Button class="w-modify" type="error" icon="trash-a">删除该艺术家</Button>
+				<Button class="w-modify" icon="edit" @click="updateArtist(artistData._id)">修改艺术家信息</Button>
+				<Button class="w-modify" type="error" icon="trash-a" @click="deleteArtist(artistData._id)">删除该艺术家</Button>
 			</section>
 			<div class="right-area">
 				<section class="w-intro">
@@ -91,6 +91,12 @@ export default {
 			this.$http.get(`/view/artistInfo?id=${this.artistId}`).then(res => {
 				this.artistData = res.data.data;
 			});
+		},
+		updateArtist(aid) {
+			this.$router.push({ path: 'editArtist', query: { aid: aid}});
+		},
+		deleteArtist(aid) {
+
 		}
 	},
 	mounted() {

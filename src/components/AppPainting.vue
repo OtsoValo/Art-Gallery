@@ -187,7 +187,7 @@ export default {
 			this.paintingModal = true;
 			this.modalData = thumb;
 			this.$nextTick(() => {
-				const modalIm = this.$refs['modal-im'];
+				const modalIm = document.getElementById('modal-im');
 				const outerWidth = 40;
 				const imWidth = modalIm.width < 600 ? 1200 : modalIm.width;
 				this.modalWidth = imWidth + outerWidth;

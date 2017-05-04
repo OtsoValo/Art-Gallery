@@ -2,10 +2,11 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import AppPainting from '@/components/AppPainting';
 import AppArtist from '@/components/AppArtist';
-import NewArtist from '@/components/admin/NewArtist.vue';
-import NewPainting from '@/components/admin/NewPainting.vue';
-import EditArtist from '@/components/admin/EditArtist.vue';
-import EditPainting from '@/components/admin/EditPainting.vue';
+import NewArtist from '@/components/admin/NewArtist';
+import NewPainting from '@/components/admin/NewPainting';
+import EditArtist from '@/components/admin/EditArtist';
+import EditPainting from '@/components/admin/EditPainting';
+import App404 from '@/components/App404';
 
 Vue.use(Router);
 
@@ -39,6 +40,10 @@ export default new Router({
 			path: '/editPainting',
 			name: 'EditPainting',
 			component: EditPainting
+		}, {
+			path: '/404notfound',
+			name: 'App404',
+			component: App404
 		}
 	]
 });

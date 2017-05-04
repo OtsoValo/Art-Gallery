@@ -145,7 +145,8 @@ export default {
 						end: '',
 						style: '',
 						descr: '',
-						site: ''
+						site: '',
+						voiceSpeed: 20
 					};
 				} else {
 					this.$Notice.warning({ title: TIPS.NET_ERR });

@@ -161,7 +161,8 @@ export default {
 						intro: '',
 						bigStoryNum: 30,
 						bigStories: [],
-						works: ''
+						works: '',
+						voiceSpeed: 20
 					};
 					this.genStories(3);
 				} else {
@@ -182,7 +183,7 @@ export default {
 					content: '',
 				});
 				this.plusNotice(false);
-			} else {
+			} else if (numAfter < numBefore) {
 				bigStories.splice(numAfter);
 				this.minusAlert(false);
 			}

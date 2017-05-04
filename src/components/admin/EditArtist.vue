@@ -2,7 +2,7 @@
 	<div class="admin-edit-artist">
 		<Form :label-width="120"
 		      class="w-form">
-			<Form-item label="上传艺术家肖像">
+			<Form-item label="修改艺术家肖像">
 				<Upload action="/view/fileUpload/artist"
 				        :on-success="uploadSucc"
 				        name="artist">
@@ -20,14 +20,14 @@
 				             placement="bottom-start"
 				             placeholder="出生日期"
 				             format="出生于yyyy年MM月"
-							 :editable="false"
+				             :editable="false"
 				             v-model="artist.birth"
 				             style="width: 200px; display: inline-block;"></Date-picker>
 				<Date-picker type="month"
 				             placement="bottom-start"
 				             placeholder="逝世日期"
 				             format="逝世于yyyy年MM月"
-							 :editable="false"
+				             :editable="false"
 				             v-model="artist.death"
 				             style="width: 200px; display: inline-block;"></Date-picker>
 			</Form-item>
@@ -66,6 +66,14 @@
 				       style="width: 400px"
 				       v-model="artist.works"></Input>
 			</Form-item>
+			<Form-item label="重新生成语音速度">
+				<Slider v-model="artist.voiceSpeed"
+				        :step="10"
+				        :min="10"
+				        :max="90"
+				        show-stops
+				        :tip-format="formatVoice"></Slider>
+			</Form-item>
 			<Form-item>
 				<Button type="primary"
 				        size="large"
@@ -78,7 +86,8 @@
 			      type="image"
 			      v-show="artist.im === ''"
 			      size="40"></Icon>
-			<img :src="artist.im" v-show="artist.im">
+			<img :src="artist.im"
+			     v-show="artist.im">
 		</div>
 	</div>
 </template>
@@ -98,13 +107,18 @@ export default {
 				intro: '',
 				bigStoryNum: 30,
 				bigStories: [],
-				works: ''
+				works: '',
+				voiceSpeed: 20,
+				_id: ''
 			}
 		};
 	},
 	methods: {
 		formatStory(val) {
 			return `${val / 10}个重要时期`;
+		},
+		formatVoice(val) {
+			return `语速 ${val / 10}`;
 		},
 		minusAlert(nodesc) {
 			this.$Notice.warning({
@@ -136,22 +150,11 @@ export default {
 			let comma = artistData.works.includes(',') ? ',' : '，';
 			artistData.works = artistData.works.split(comma);
 			delete artistData.bigStoryNum;
-			this.$http.post('/view/newArtist', artistData).then(res => {
+			this.$http.patch('/view/editArtist', artistData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
-					this.$Notice.success({ title: TIPS.SAVE_ARTIST_SUCC });
-					// 重置所有表单信息
-					this.artist = {
-						name: '',
-						im: '',
-						imMin: '',
-						birth: '',
-						death: '',
-						intro: '',
-						bigStoryNum: 30,
-						bigStories: [],
-						works: ''
-					};
-					this.genStories(3);
+					this.$Notice.success({ title: TIPS.UPDATE_ARTIST_SUCC });
+					// 成功后跳转回艺术家组件
+					this.$router.push({ path: '/artist', query: { aid: this.artist._id } });
 				} else {
 					this.$Notice.warning({ title: TIPS.NET_ERR });
 				}
@@ -170,7 +173,7 @@ export default {
 					content: '',
 				});
 				this.plusNotice(false);
-			} else {
+			} else if (numAfter < numBefore) {
 				bigStories.splice(numAfter);
 				this.minusAlert(false);
 			}
@@ -178,6 +181,18 @@ export default {
 	},
 	mounted() {
 		this.genStories(this.artist.bigStoryNum / 10);
+		const aid = this.$route.query.aid;
+		if (!aid) {
+			this.$router.push({ path: '/404notfound' });
+		} else {
+			this.$http.get(`/view/artistInfo?id=${aid}`).then(res => {
+				const artistData = res.data.data;
+				artistData.works = artistData.works.join('，');
+				_.assign(this.artist, res.data.data);
+				this.artist.bigStoryNum = this.artist.bigStories.length * 10;
+				console.log(this.artist);
+			});
+		}
 	}
 }
 </script>

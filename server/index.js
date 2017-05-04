@@ -19,7 +19,8 @@ const CODE = {
 	SUCCESS: 200,
 	ERROR: 500
 };
-const MIN_QUAL = 60;
+const MIN_QUAL = 80;
+const MIN_WIDTH = 300;
 
 const uploadSavePath = path.resolve(__dirname, '../static/uploads');
 const storage = multer.diskStorage({
@@ -134,7 +135,7 @@ app.post('/view/fileUpload/painting', upload.single('painting'), (req, res) => {
 	const affix = /\.[^\.]+$/.exec(fileName)[0];
 	const timestamp = /\d+/ig.exec(fileName)[0];
 	const minFileName = `${req.file.fieldname}-${timestamp}-min${affix}`;
-	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), { quality: MIN_QUAL });
+	images(filePath).size(MIN_WIDTH).save(path.resolve(uploadSavePath, minFileName), { quality: MIN_QUAL });
 	res.json({
 		code: CODE.SUCCESS,
 		data: `/view/uploadImg?file=${fileName}`,
@@ -149,7 +150,7 @@ app.post('/view/fileUpload/artist', upload.single('artist'), (req, res) => {
 	const affix = /\.[^\.]+$/.exec(fileName)[0];
 	const timestamp = /\d+/ig.exec(fileName)[0];
 	const minFileName = `${req.file.fieldname}-${timestamp}-min${affix}`;
-	images(filePath).size(300).save(path.resolve(uploadSavePath, minFileName), { quality: MIN_QUAL });
+	images(filePath).size(MIN_WIDTH).save(path.resolve(uploadSavePath, minFileName), { quality: MIN_QUAL });
 	res.json({
 		code: CODE.SUCCESS,
 		data: `/view/uploadImg?file=${fileName}`,
@@ -197,13 +198,21 @@ app.post('/view/newArtist', (req, res) => {
 	})
 });
 
-// 修改画作
-app.patch('view/editArtist', (req, res) => {
-
+// 修改艺术家
+app.patch('/view/editArtist', (req, res) => {
+	const theArtist = req.body;
+	const aid = theArtist._id;
+	models.Artist.update({_id: aid}, theArtist, (err)=>{
+		let code = CODE.SUCCESS;
+		if(err) code = CODE.ERROR;
+		res.json({
+			code: code
+		});
+	});
 });
 
-// 修改艺术家
-app.patch('view/editPainting', (req, res) => {
+// 修改画作
+app.patch('/view/editPainting', (req, res) => {
 
 });
 

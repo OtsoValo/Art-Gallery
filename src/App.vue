@@ -20,7 +20,8 @@
 				<Icon type="ios-infinite"></Icon>
 				无尽探索
 			</Menu-item>
-			<Submenu name="admin" style="z-index: 9999;">
+			<Submenu name="admin"
+			         style="z-index: 9999;">
 				<template slot="title">
 					<Icon type="ios-gear"></Icon>
 					后台
@@ -30,8 +31,10 @@
 					<Menu-item name="newPainting">新增一幅画作</Menu-item>
 				</Menu-group>
 				<Menu-group title="编辑更新">
-					<Menu-item name="editArtist">编辑某个艺术家</Menu-item>
-					<Menu-item name="editPainting">编辑某幅画作</Menu-item>
+					<Menu-item name="editArtist"
+					           disabled>编辑某个艺术家</Menu-item>
+					<Menu-item name="editPainting"
+					           disabled>编辑某幅画作</Menu-item>
 				</Menu-group>
 			</Submenu>
 	
@@ -55,8 +58,8 @@ export default {
 		routePage(name) {
 			this.$router.push({ path: name });
 		},
-		changeMenu(){
-			this.defaultLink = 	this.$route.path;
+		changeMenu() {
+			this.defaultLink = this.$route.path;
 		}
 	},
 	watch: {
@@ -65,6 +68,13 @@ export default {
 	mounted() {
 		const curPath = this.$route.path;
 		this.defaultLink = curPath.split('/')[1];
+		this.$router.beforeEach((to, from, next) => {
+			if (to.matched.length === 0) {
+				next({ path: '/404notfound' });
+			} else {
+				next();
+			}
+		});
 	}
 }
 </script>
