@@ -8,7 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const request = require('request');
 
-function generateVoice(voiceText = "", fileName = `demo-${Date.now()}.mp3`, speed = 2) {
+function generateVoice(voiceText = "", fileName = `demo-${Date.now()}.mp3`, speed = 4) {
 	const data = qs.stringify({
 		"lan": "zh",
 		"ie": "UTF-8",

@@ -218,6 +218,7 @@ export default {
 		seeThumb(thumb) {
 			this.paintingModal = true;
 			this.modalData = thumb;
+			// 自动匹配图片宽度
 			this.$nextTick(() => {
 				const modalIm = document.getElementById('modal-im');
 				const outerWidth = 40;
@@ -235,8 +236,10 @@ export default {
 		},
 		deletePainting() {
 			const pid = this.modalData._id;
+			const im = encodeURIComponent(this.modalData.im);
+			const imMin = encodeURIComponent(this.modalData.imMin);
 			this.del_loading = true;
-			this.$http.delete(`/view/deletePainting?pid=${pid}`).then(res => {
+			this.$http.delete(`/view/deletePainting?pid=${pid}&im=${im}&imMin=${imMin}`).then(res => {
 				this.del_loading = false;
 				this.deleteModal = false;
 				this.paintingModal = false;
@@ -307,7 +310,6 @@ export default {
 	padding-top: 10px;
 	.w-thumb {
 		position: relative;
-		min-width: 60px;
 		height: 120px;
 		overflow: hidden;
 		margin: 8px;
@@ -319,9 +321,9 @@ export default {
 		}
 		.u-thumbim {
 			height: 100%;
-			transition: height .3s ease;
+			// transition: height .3s ease;
 			&:hover {
-				height: 150%;
+				// width: 150%;
 			}
 		}
 	}

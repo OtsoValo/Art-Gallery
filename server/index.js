@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const querystring = require('querystring');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 
@@ -239,9 +240,20 @@ app.patch('/view/editPainting', (req, res) => {
 	})
 });
 
-// 删除某个艺术家，及其对应的所有画作
+// 抽取删除图片公共函数
+function deleteLocalFile(query_im, query_imMin) {
+	const im_name = _.values(querystring.parse(decodeURIComponent(query_im)))[0];
+	const imMin_name = _.values(querystring.parse(decodeURIComponent(query_imMin)))[0];
+	const im_path = path.resolve(__dirname, '../static/uploads/', im_name);
+	const imMin_path = path.resolve(__dirname, '../static/uploads/', imMin_name);
+	fs.unlink(im_path);
+	fs.unlink(imMin_path);
+}
+
+// 删除某个艺术家，及其对应的所有画作及其图片
 app.delete('/view/deleteArtist', (req, res) => {
 	const aid = req.query.aid;
+	deleteLocalFile(req.query.im, req.query.imMin);
 	models.Artist.findByIdAndRemove({ _id: aid }, (err) => {
 		let code = CODE.SUCCESS;
 		if (err) code = CODE.ERROR;
@@ -251,9 +263,10 @@ app.delete('/view/deleteArtist', (req, res) => {
 	});
 });
 
-// 删除某幅画作
+// 删除某幅画作以及其图片
 app.delete('/view/deletePainting', (req, res) => {
 	const pid = req.query.pid;
+	deleteLocalFile(req.query.im, req.query.imMin);
 	models.Painting.findByIdAndRemove({ _id: pid }, (err) => {
 		let code = CODE.SUCCESS;
 		if (err) code = CODE.ERROR;
