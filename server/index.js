@@ -113,6 +113,21 @@ app.get('/view/artists', (req, res) => {
 	});
 });
 
+// 某画作所有信息
+app.get('/view/paintingInfo', (req, res) => {
+	const id = req.query.id;
+	models.Painting.findById(id, (err, painting) => {
+		let code = CODE.SUCCESS;
+		if (err) {
+			code = CODE.ERROR
+		}
+		res.json({
+			code: code,
+			data: painting
+		});
+	});
+});
+
 // 某艺术家所有信息
 app.get('/view/artistInfo', (req, res) => {
 	const id = req.query.id;
@@ -202,9 +217,9 @@ app.post('/view/newArtist', (req, res) => {
 app.patch('/view/editArtist', (req, res) => {
 	const theArtist = req.body;
 	const aid = theArtist._id;
-	models.Artist.update({_id: aid}, theArtist, (err)=>{
+	models.Artist.update({ _id: aid }, theArtist, (err) => {
 		let code = CODE.SUCCESS;
-		if(err) code = CODE.ERROR;
+		if (err) code = CODE.ERROR;
 		res.json({
 			code: code
 		});
@@ -213,7 +228,39 @@ app.patch('/view/editArtist', (req, res) => {
 
 // 修改画作
 app.patch('/view/editPainting', (req, res) => {
+	const thePainting = req.body;
+	const pid = thePainting._id;
+	models.Painting.update({ _id: pid }, thePainting, (err) => {
+		let code = CODE.SUCCESS;
+		if (err) code = CODE.ERROR;
+		res.json({
+			code: code
+		});
+	})
+});
 
+// 删除某个艺术家，及其对应的所有画作
+app.delete('/view/deleteArtist', (req, res) => {
+	const aid = req.query.aid;
+	models.Artist.findByIdAndRemove({ _id: aid }, (err) => {
+		let code = CODE.SUCCESS;
+		if (err) code = CODE.ERROR;
+		res.json({
+			code: code
+		});
+	});
+});
+
+// 删除某幅画作
+app.delete('/view/deletePainting', (req, res) => {
+	const pid = req.query.pid;
+	models.Painting.findByIdAndRemove({ _id: pid }, (err) => {
+		let code = CODE.SUCCESS;
+		if (err) code = CODE.ERROR;
+		res.json({
+			code: code
+		});
+	});
 });
 
 app.listen(9010, () => {

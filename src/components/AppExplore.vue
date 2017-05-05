@@ -1,12 +1,12 @@
 <template>
-	<div class="app-welcom">
+	<div class="app-explore">
 		
 	</div>
 </template>
 
 <script>
 export default {
-	name: 'AppWelcome',
+	name: 'AppExplore',
 	data() {
 		return {
 		}

@@ -12,15 +12,16 @@
 				      slot="icon"></Icon>
 				<template slot="desc">
 					<ol>
-						<li>有可能输入非法的页面路径哦，可以
+						<li>1、有可能输入非法的页面路径哦，可以
 							<Badge dot><a href="javascript:void(0);"
 								   @click="routeIndex">返回首页</a>
 							</Badge>
 						</li>
-						<li>有可能资源走丢了，让我们<a href="javascript:void(0);"
+						<li>2、有可能资源走丢了，让我们<a href="javascript:void(0);"
 							   @click="routeBefore">回到上一步</a></li>
-						<li>也有可能是服务器出问题了，请用力<a href="javascript:void(0);"
+						<li>3、也有可能是服务器出问题了，请用力<a href="javascript:void(0);"
 							   @click="routeIndex">回到最初</a>的美好试试吧</li>
+						<li>4、除此之外，那就还没开发完成啦</li>
 					</ol>
 				</template>
 			</Alert>

@@ -16,7 +16,7 @@
 				<Icon type="pizza"></Icon>
 				风格拼图
 			</Menu-item>
-			<Menu-item name="funny">
+			<Menu-item name="explore">
 				<Icon type="ios-infinite"></Icon>
 				无尽探索
 			</Menu-item>

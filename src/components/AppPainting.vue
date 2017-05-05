@@ -131,12 +131,14 @@
 					<Col span="12">	
 						<Button icon="edit"
 								style="margin-right:10px;"
+								@click="updatePainting"
 								long>更改画作信息</Button>
 					</Col>
 					<Col span="12">			
 						<Button type="error"
 								icon="trash-a"
 								style="margin-left:10px;"
+								@click="deletePainting"
 								long>删除该画作</Button>
 					</Col>
 				</Row>
@@ -195,6 +197,13 @@ export default {
 		},
 		seeArtist(aid) {
 			this.$router.push({ path: '/artist', query: { aid: aid } });
+		},
+		updatePainting(){
+			const pid = this.modalData._id;
+			this.$router.push({ path: '/editPainting', query: { pid: pid}});
+		},
+		deletePainting(){
+			const pid = modalData._id;
 		}
 	},
 	mounted() {
@@ -217,7 +226,8 @@ export default {
 
 <style scoped lang="scss">
 .m-carousel {
-	background: url('../assets/geometry.png') repeat;
+	background: url('../assets/gplaypattern.png') repeat;
+	border-bottom: 1px solid #eee;
 	min-width: 1000px;
 	.w-great {
 		display: flex;

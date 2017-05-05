@@ -188,9 +188,8 @@ export default {
 			this.$http.get(`/view/artistInfo?id=${aid}`).then(res => {
 				const artistData = res.data.data;
 				artistData.works = artistData.works.join('，');
-				_.assign(this.artist, res.data.data);
+				_.assign(this.artist, artistData);
 				this.artist.bigStoryNum = this.artist.bigStories.length * 10;
-				console.log(this.artist);
 			});
 		}
 	}

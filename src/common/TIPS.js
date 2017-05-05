@@ -5,5 +5,7 @@ export default {
 	SAVE_ARTIST_SUCC: '新增艺术家成功',
 	SAVE_PAINTING_SUCC: '新增画作成功',
 	UPDATE_ARTIST_SUCC: '修改艺术家信息成功',
-	UPDATE_PAINTING_SUCC: '修改画作信息成功'
+	UPDATE_PAINTING_SUCC: '修改画作信息成功',
+	DELETE_ARTIST_SUCC: '删除艺术家成功',
+	DELETE_PAINTING_SUCC: '删除画作成功'
 };
