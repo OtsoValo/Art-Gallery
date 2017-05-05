@@ -57,7 +57,7 @@
 			<Form-item label="画作描述">
 				<Input placeholder="可以参考百度百科或者维基百科嘛..."
 				       type="textarea"
-				       :rows="4"
+				       :rows="8"
 				       style="width: 800px"
 				       v-model="painting.descr"></Input>
 			</Form-item>

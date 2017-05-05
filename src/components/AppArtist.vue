@@ -131,7 +131,11 @@ export default {
 				this.del_loading = false;
 				this.deleteModal = false;
 				this.getAllArtists(false);
-				this.$Notice.success({ title: TIPS.DELETE_ARTIST_SUCC });
+				if(res.data.code === 200){
+					this.$Notice.success({ title: TIPS.DELETE_ARTIST_SUCC });
+				} else {
+					this.$Notice.error({ title: TIPS.DELETE_ARTIST_FAIL });
+				}
 			});
 		},
 		getAllArtists(noDel = true) {
