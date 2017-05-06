@@ -15,6 +15,6 @@
 
 ---
 
-<img src="./static/site1.jpg" />
-<img src="./static/site2.jpg" />
-<img src="./static/site3.jpg" />
+<img src="./etc/site1.jpg" />
+<img src="./etc/site2.jpg" />
+<img src="./etc/site3.jpg" />
