@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 // 暂不做用户登录权限
 const UserSchema = mongoose.Schema({
 	account: String,
-	gender: String,
-	age: Number,
 	pwd: String,
 	email: String
 });

@@ -7,6 +7,8 @@ const multer = require('multer');
 
 const _ = require('lodash');
 const images = require('images');
+const session = require('express-session');
+
 // 数据库处理
 const dbsv = require('./dbsv');
 const models = require('./models');
@@ -15,6 +17,13 @@ const generateVoice = require('./voiceFactory');
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.enable('trust proxy');
+app.use(session({
+	secret: 'special key',
+	resave: false,
+	saveUninitialized: true,
+	cookie: { secure: true, maxAge: 1000 * 60 * 60 }
+}));
 
 const CODE = {
 	SUCCESS: 200,
@@ -40,6 +49,31 @@ app.use(function (req, res, next) {
 		'Access-Control-Allow-Origin': '*'
 	});
 	next();
+});
+
+// 来来来用户注册
+app.post('/view/user/regist', (req, res) => {
+	new models.User(req.body).save((err, user) => {
+		if (err) {
+			res.json({
+				code: CODE.ERROR,
+				data: {}
+			});
+		} else {
+			res.json({
+				code: CODE.SUCCESS,
+				data: user
+			});
+		}
+	});
+});
+
+// 来来来用户登录
+app.post('/view/user/login', (req, res) => {
+	const account = req.body.account;
+	const pwd = req.body.pwd;
+	const uid = req.body.uid
+	// 检查用户账号和密码是否和数据库中相匹配
 });
 
 // 单张缩略图
@@ -69,14 +103,14 @@ app.get('/view/paintingList', (req, res) => {
 			res.json({
 				code: CODE.ERROR,
 				data: []
+			});;
+		} else {
+			ary = _.sampleSize(paintings, size);
+			res.json({
+				code: CODE.SUCCESS,
+				data: ary
 			});
-			return;
 		}
-		ary = _.sampleSize(paintings, size);
-		res.json({
-			code: CODE.SUCCESS,
-			data: ary
-		});
 	})
 });
 
@@ -86,12 +120,21 @@ app.get('/view/thumbnailList', (req, res) => {
 	const pageSize = req.query.pageSize;
 	const range = [(page - 1) * pageSize, page * pageSize];
 	models.Painting.find({}, (err, paintings) => {
-		let total = paintings.length;
-		let rawAry = _.slice(paintings, range[0], range[1]);
-		res.json({
-			total: total,
-			data: rawAry
-		});
+		if (err) {
+			res.json({
+				code: CODE.ERROR,
+				total: 0,
+				data: []
+			});
+		} else {
+			let total = paintings.length;
+			let rawAry = _.slice(paintings, range[0], range[1]);
+			res.json({
+				code: CODE.SUCCESS,
+				total: total,
+				data: rawAry
+			});
+		}
 	});
 });
 
@@ -104,19 +147,19 @@ app.get('/view/artists', (req, res) => {
 				code: CODE.ERROR,
 				data: []
 			});
-			return;
-		}
-		artists.forEach(artist => {
-			idImAry.push({
-				name: artist.name,
-				id: artist._id,
-				imMin: artist.imMin
+		} else {
+			artists.forEach(artist => {
+				idImAry.push({
+					name: artist.name,
+					id: artist._id,
+					imMin: artist.imMin
+				});
 			});
-		});
-		res.json({
-			code: CODE.SUCCESS,
-			data: idImAry
-		});
+			res.json({
+				code: CODE.SUCCESS,
+				data: idImAry
+			});
+		}
 	});
 });
 
@@ -124,14 +167,17 @@ app.get('/view/artists', (req, res) => {
 app.get('/view/paintingInfo', (req, res) => {
 	const id = req.query.id;
 	models.Painting.findById(id, (err, painting) => {
-		let code = CODE.SUCCESS;
 		if (err) {
-			code = CODE.ERROR
+			res.json({
+				code: CODE.ERROR,
+				data: {}
+			});
+		} else {
+			res.json({
+				code: CODE.SUCCESS,
+				data: painting
+			});
 		}
-		res.json({
-			code: code,
-			data: painting
-		});
 	});
 });
 
@@ -139,14 +185,17 @@ app.get('/view/paintingInfo', (req, res) => {
 app.get('/view/artistInfo', (req, res) => {
 	const id = req.query.id;
 	models.Artist.findById(id, (err, artist) => {
-		let code = CODE.SUCCESS;
 		if (err) {
-			code = CODE.ERROR
+			res.json({
+				code: CODE.ERROR,
+				data: {}
+			});
+		} else {
+			res.json({
+				code: CODE.SUCCESS,
+				data: artist
+			});
 		}
-		res.json({
-			code: code,
-			data: artist
-		});
 	});
 });
 
@@ -206,14 +255,17 @@ app.post('/view/newPainting', (req, res) => {
 	onePainting.voice = `/view/audio?fn=${voiceName}`;
 	delete onePainting.voiceSpeed;
 	new models.Painting(onePainting).save((err, painting) => {
-		let code = CODE.SUCCESS;
 		if (err) {
-			code = CODE.ERROR
+			res.json({
+				code: CODE.ERROR,
+				data: {}
+			});
+		} else {
+			res.json({
+				code: CODE.SUCCESS,
+				data: painting
+			});
 		}
-		res.json({
-			code: code,
-			data: painting
-		});
 	});
 });
 
@@ -221,14 +273,17 @@ app.post('/view/newPainting', (req, res) => {
 app.post('/view/newArtist', (req, res) => {
 	const oneArtist = new models.Artist(req.body);
 	oneArtist.save((err, artist) => {
-		let code = CODE.SUCCESS;
 		if (err) {
-			code = CODE.ERROR
+			res.json({
+				code: CODE.ERROR,
+				data: {}
+			});
+		} else {
+			res.json({
+				code: CODE.SUCCESS,
+				data: artist
+			});
 		}
-		res.json({
-			code: code,
-			data: artist
-		});
 	})
 });
 
@@ -237,11 +292,15 @@ app.patch('/view/editArtist', (req, res) => {
 	const theArtist = req.body;
 	const aid = theArtist._id;
 	models.Artist.update({ _id: aid }, theArtist, (err) => {
-		let code = CODE.SUCCESS;
-		if (err) code = CODE.ERROR;
-		res.json({
-			code: code
-		});
+		if (err) {
+			res.json({
+				code: CODE.ERROR
+			});
+		} else {
+			res.json({
+				code: CODE.SUCCESS
+			});
+		}
 	});
 });
 
@@ -256,11 +315,15 @@ app.patch('/view/editPainting', (req, res) => {
 	thePainting.voice = `/view/audio?fn=${voiceName}`;
 	delete thePainting.voiceSpeed;
 	models.Painting.update({ _id: pid }, thePainting, (err) => {
-		let code = CODE.SUCCESS;
-		if (err) code = CODE.ERROR;
-		res.json({
-			code: code
-		});
+		if (err) {
+			res.json({
+				code: CODE.ERROR
+			});
+		} else {
+			res.json({
+				code: CODE.SUCCESS
+			});
+		}
 	})
 });
 
@@ -283,11 +346,14 @@ app.delete('/view/deleteArtist', (req, res) => {
 	const aid = req.query.aid;
 	deleteLocalFile(req.query.im, req.query.imMin);
 	models.Artist.findByIdAndRemove({ _id: aid }, (err) => {
-		let code = '';
 		if (err) {
-			code = CODE.ERROR;
+			res.json({
+				code: CODE.ERROR
+			});
 		} else {
-			code = CODE.SUCCESS;
+			res.json({
+				code: CODE.SUCCESS
+			});
 			// 为了对应把画作的图片及音频删掉也是累啊
 			models.Painting.find({ aid: aid }, (err, p) => {
 				if (err) return;
@@ -301,9 +367,7 @@ app.delete('/view/deleteArtist', (req, res) => {
 				});
 			});
 		}
-		res.json({
-			code: code
-		});
+
 	});
 });
 
@@ -312,11 +376,15 @@ app.delete('/view/deletePainting', (req, res) => {
 	const pid = req.query.pid;
 	deleteLocalFile(req.query.im, req.query.imMin, true);
 	models.Painting.findByIdAndRemove({ _id: pid }, (err) => {
-		let code = CODE.SUCCESS;
-		if (err) code = CODE.ERROR;
-		res.json({
-			code: code
-		});
+		if (err) {
+			res.json({
+				code: CODE.ERROR
+			});
+		} else {
+			res.json({
+				code: CODE.SUCCESS
+			});
+		}
 	});
 });
 

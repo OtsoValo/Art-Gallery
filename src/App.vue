@@ -21,7 +21,7 @@
 				无尽探索
 			</Menu-item>
 			<Submenu name="admin"
-			         style="z-index: 9999;">
+			         style="z-index: 99;">
 				<template slot="title">
 					<Icon type="ios-gear"></Icon>
 					后台
@@ -38,8 +38,84 @@
 				</Menu-group>
 			</Submenu>
 	
-			<div class="power-admin"></div>
+			<div class="power-admin">
+				<Poptip trigger="hover"
+				        placement="bottom"
+				        :content="user.id">
+					<a class="w-user-identify"
+					   href="javascript:void(0);">{{user.account}} :) </a>
+				</Poptip>
+				<Button type="ghost"
+				        @click="registModal = true">注册</Button>
+				<Button type="ghost"
+				        @click="loginModal = true">登录</Button>
+				<img class="w-logo"
+				     src="./assets/favicon.png"
+				     alt="LOGO">
+			</div>
 		</Menu>
+	
+		<!--登录弹窗-->
+		<Modal v-model="loginModal"
+		       width="360">
+			<p slot="header"
+			   style="color:#39f;text-align:center">
+				<Icon type="information-circled"></Icon>
+				<span>登录</span>
+			</p>
+			<div style="text-align:center">
+				<Input v-model="login.account"
+				       size="large">
+				<span slot="prepend">账号</span>
+				</Input>
+				<br/>
+				<Input v-model="login.pwd"
+				       type="password"
+				       size="large">
+				<span slot="prepend">密码</span>
+				</Input>
+			</div>
+			<div slot="footer">
+				<Button type="primary"
+				        size="large"
+				        long
+				        :loading="login.loading"
+				        @click="doLogin">确认</Button>
+			</div>
+		</Modal>
+		<!--注册弹窗-->
+		<Modal v-model="registModal"
+		       width="360">
+			<p slot="header"
+			   style="color:#39f;text-align:center">
+				<Icon type="information-circled"></Icon>
+				<span>注册</span>
+			</p>
+			<div style="text-align:center">
+				<Input v-model="regist.account"
+				       size="large">
+				<span slot="prepend">账号</span>
+				</Input>
+				<br/>
+				<Input v-model="regist.pwd"
+				       type="password"
+				       size="large">
+				<span slot="prepend">密码</span>
+				</Input>
+				<br/>
+				<Input v-model="regist.email"
+				       size="large">
+				<span slot="prepend">邮箱</span>
+				</Input>
+			</div>
+			<div slot="footer">
+				<Button type="primary"
+				        size="large"
+				        long
+				        :loading="regist.loading"
+				        @click="doRegist">确认</Button>
+			</div>
+		</Modal>
 	
 		<div class="app-view">
 			<router-view></router-view>
@@ -51,7 +127,25 @@
 export default {
 	data() {
 		return {
-			defaultLink: 'painting'
+			defaultLink: 'painting',
+			loginModal: false,
+			registModal: false,
+			isLogin: false,
+			user: {
+				account: '游客',
+				id: 'noop~'
+			},
+			login: {
+				account: '',
+				pwd: '',
+				loading: false
+			},
+			regist: {
+				account: '',
+				pwd: '',
+				email: '',
+				loading: false
+			}
 		};
 	},
 	methods: {
@@ -60,6 +154,28 @@ export default {
 		},
 		changeMenu() {
 			this.defaultLink = this.$route.path.split('/')[1];
+		},
+		doRegist() {
+			const registData = _.cloneDeep(this.regist);
+			this.regist.loading = true;
+			delete registData.loading;
+			this.$http.post('/view/user/regist', registData).then(res => {
+				if (res.data.code === 200) {
+					this.$Notice.success({
+						title: '注册成功啦，赶紧去登录吧~'
+					});
+					this.regist.loading = false;
+					this.registModal = false;
+					this.loginModal = true;
+				} else {
+					this.$Notice.warning({
+						titls: '注册失败啦，请重新尝试！'
+					})
+				}
+			});
+		},
+		doLogin() {
+
 		}
 	},
 	watch: {
@@ -76,11 +192,16 @@ export default {
 #app {
 	.power-admin {
 		float: right;
-		width: 36px;
-		height: 36px;
-		margin: 12px;
-		background: url(./assets/favicon.png) no-repeat;
-		background-size: cover;
+		height: 100%;
+		.w-user-identify {
+			margin-right: 10px;
+		}
+		.w-logo {
+			display: block;
+			float: right;
+			height: 36px;
+			margin: 12px;
+		}
 	}
 }
 </style>
