@@ -66,14 +66,6 @@
 				       style="width: 400px"
 				       v-model="artist.works"></Input>
 			</Form-item>
-			<Form-item label="重新生成语音速度">
-				<Slider v-model="artist.voiceSpeed"
-				        :step="10"
-				        :min="10"
-				        :max="90"
-				        show-stops
-				        :tip-format="formatVoice"></Slider>
-			</Form-item>
 			<Form-item>
 				<Button type="primary"
 				        size="large"
@@ -108,7 +100,6 @@ export default {
 				bigStoryNum: 30,
 				bigStories: [],
 				works: '',
-				voiceSpeed: 20,
 				_id: ''
 			}
 		};
@@ -116,9 +107,6 @@ export default {
 	methods: {
 		formatStory(val) {
 			return `${val / 10}个重要时期`;
-		},
-		formatVoice(val) {
-			return `语速 ${val / 10}`;
 		},
 		minusAlert(nodesc) {
 			this.$Notice.warning({

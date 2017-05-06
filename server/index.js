@@ -54,6 +54,12 @@ app.get('/view/painting', (req, res) => {
 	res.sendFile(path.resolve(__dirname, '../static/paintings/', `${id}.jpg`));
 });
 
+// 单首音频文件
+app.get('/view/audio', (req, res) => {
+	const fn = req.query.fn;
+	res.sendFile(path.resolve(__dirname, '../static/voice/', `${fn}.mp3`));
+})
+
 // 轮播使用
 app.get('/view/paintingList', (req, res) => {
 	const size = req.query.size;

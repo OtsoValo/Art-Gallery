@@ -61,7 +61,7 @@
 			   style="color:#666; text-align:center; font-size:20px; line-height: 1;">
 				<span>{{modalData.name}}</span>
 			</p>
-			<div style="text-align:center">
+			<div style="text-align:center;">
 				<img ref="modal-im"
 				     id="modal-im"
 				     :src="modalData.im"
@@ -172,12 +172,15 @@
 				        @click="deletePainting">删除</Button>
 			</div>
 		</Modal>
+	
+		<AudioPlayer class="m-audioplayer"></AudioPlayer>
 		<Back-top></Back-top>
 	</div>
 </template>
 
 <script>
 import TIPS from '../common/TIPS';
+import AudioPlayer from './AudioPlayer';
 export default {
 	name: 'AppPainting',
 	data() {
@@ -200,6 +203,7 @@ export default {
 			del_loading: false
 		};
 	},
+	components: { AudioPlayer },
 	filters: {
 		timeNormal(val) {
 			const dval = new Date(val);
@@ -248,12 +252,12 @@ export default {
 					this.greatAry = res.data.data;
 				});
 				this.changePage(this.page);
-				if(res.data.code === 200){
+				if (res.data.code === 200) {
 					this.$Notice.success({ title: TIPS.DELETE_PAINTING_SUCC });
 				} else {
 					this.$Notice.error({ title: TIPS.DELETE_PAINTING_FAIL });
 				}
-				
+
 			});
 		}
 	},
@@ -276,69 +280,77 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.m-carousel {
-	background: url('../assets/gplaypattern.png') repeat;
-	border-bottom: 1px solid #eee;
-	min-width: 1000px;
-	.w-great {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		width: 100%;
-		height: 600px;
-		overflow: hidden;
-		&>img {
-			display: block;
-			height: 90%;
-		}
+.app-painting {
+	position: relative;
+	.m-audioplayer {
+		position: fixed;
+		z-index: 9999;
+		left: 20px;
+		bottom: 20px;
 	}
-}
-
-.m-divider {
-	margin: 20px auto 0;
-	width: 800px;
-}
-
-.m-stage {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	max-width: 1920px;
-	min-width: 1000px;
-	margin: 0 auto;
-	padding-top: 10px;
-	.w-thumb {
-		position: relative;
-		height: 120px;
-		overflow: hidden;
-		margin: 8px;
-		border-radius: 4px;
-		background: #eee;
-		&:hover {
+	.m-carousel {
+		background: url('../assets/gplaypattern.png') repeat;
+		border-bottom: 1px solid #eee;
+		min-width: 1000px;
+		.w-great {
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			cursor: pointer;
-			box-shadow: 0 0 8px #888;
-		}
-		.u-thumbim {
-			height: 100%;
-			// transition: height .3s ease;
-			&:hover {
-				// width: 150%;
+			width: 100%;
+			height: 600px;
+			overflow: hidden;
+			&>img {
+				display: block;
+				height: 90%;
 			}
 		}
 	}
-}
 
-.m-paginbox {
-	position: relative;
-	width: 100%;
-	min-height: 60px;
-	margin: 20px 0;
-	.w-pagin {
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
+	.m-divider {
+		margin: 20px auto 0;
+		width: 800px;
+	}
+
+	.m-stage {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		max-width: 1920px;
+		min-width: 1000px;
+		margin: 0 auto;
+		padding-top: 10px;
+		.w-thumb {
+			position: relative;
+			height: 120px;
+			overflow: hidden;
+			margin: 8px;
+			border-radius: 4px;
+			background: #eee;
+			&:hover {
+				cursor: pointer;
+				box-shadow: 0 0 8px #888;
+			}
+			.u-thumbim {
+				height: 100%; // transition: height .3s ease;
+				&:hover {
+					// width: 150%;
+				}
+			}
+		}
+	}
+
+	.m-paginbox {
+		position: relative;
+		width: 100%;
+		min-height: 60px;
+		margin: 20px 0;
+		.w-pagin {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
 	}
 }
 
