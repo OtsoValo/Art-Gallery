@@ -127,6 +127,7 @@ export default {
 		savePainting() {
 			let paintingData = _.cloneDeep(this.painting);
 			paintingData.aid = (_.find(this.artists, a => { return a.name === paintingData.author; })).id;
+			paintingData.voiceSpeed = paintingData.voiceSpeed/10;
 			this.$http.post('/view/newPainting', paintingData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
 					this.$Notice.success({ title: TIPS.SAVE_PAINTING_SUCC });

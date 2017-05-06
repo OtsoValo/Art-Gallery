@@ -1,6 +1,7 @@
 <template>
 	<div class="audio-player">
-		<div class="player-shell" :class="{'shell-padding': audio.mini === false}">
+		<div class="player-shell"
+		     :class="{'shell-padding': audio.mini === false}">
 			<div class="shell-head"
 			     @click="miniSwitch">
 				<img :class="{'rolling': audio.playing}"
@@ -57,9 +58,6 @@ export default {
 		}
 	},
 	watch: {
-		'audio.playing': function (playing) {
-
-		}
 	},
 	methods: {
 		play() {
@@ -81,6 +79,12 @@ export default {
 		miniSwitch() {
 			this.audio.mini = !this.audio.mini;
 		}
+	},
+	mounted() {
+		const audiooo = this.$refs.audiooo;
+		audiooo.addEventListener('ended', () => {
+			this.audio.playing = false;
+		});
 	}
 }
 </script>
@@ -121,7 +125,7 @@ $shadow: 0 0 12px #444;
 
 .audio-player {
 	@include playerBasic;
-	.shell-padding{
+	.shell-padding {
 		padding-left: $wheelSize/2+10;
 		padding-right: $wheelSize/2+10;
 	}

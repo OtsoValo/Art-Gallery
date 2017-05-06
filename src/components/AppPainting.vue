@@ -173,7 +173,9 @@
 			</div>
 		</Modal>
 	
-		<AudioPlayer class="m-audioplayer"></AudioPlayer>
+		<AudioPlayer ref="audioPlayer" class="m-audioplayer"
+		             :audio-src="modalData.voice"
+		             :audio-name="modalData.name"></AudioPlayer>
 		<Back-top></Back-top>
 	</div>
 </template>
@@ -194,8 +196,10 @@ export default {
 			thumbAry: [],
 			paintingModal: false,
 			modalData: {
+				name: '默认背景音频',
 				size: {},
-				descr: ''
+				descr: '',
+				voice: '/view/audio?fn=stone_road'
 			},
 			modalWidth: 1200,
 			stepCur: 0,
@@ -210,6 +214,19 @@ export default {
 			return `${dval.getFullYear()}`;
 		}
 	},
+	watch: {
+		'paintingModal': function (modal_open) {
+			if (!modal_open) {
+				this.$refs.audioPlayer.pause();
+				this.modalData = {
+					name: '默认背景音频',
+					size: {},
+					descr: '',
+					voice: '/view/audio?fn=stone_road'
+				};
+			}
+		}
+	},
 	methods: {
 		changePage(page) {
 			this.page = page;
@@ -221,6 +238,7 @@ export default {
 		},
 		seeThumb(thumb) {
 			this.paintingModal = true;
+			this.$refs.audioPlayer.pause();
 			this.modalData = thumb;
 			// 自动匹配图片宽度
 			this.$nextTick(() => {

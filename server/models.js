@@ -33,6 +33,7 @@ const PaintingSchema = mongoose.Schema({
 	name: String,
 	im: String,
 	imMin: String,
+	voice: String,
 	// 艺术家的id
 	aid: String,
 	author: String,

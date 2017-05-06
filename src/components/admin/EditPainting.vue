@@ -134,6 +134,7 @@ export default {
 		},
 		updatePainting() {
 			let paintingData = _.cloneDeep(this.painting);
+			paintingData.voiceSpeed = paintingData.voiceSpeed/10;
 			this.$http.patch('/view/editPainting', paintingData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
 					this.$Notice.success({ title: TIPS.UPDATE_PAINTING_SUCC });

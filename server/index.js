@@ -192,8 +192,15 @@ app.get('/view/uploadImg', (req, res) => {
 
 // 存入画作
 app.post('/view/newPainting', (req, res) => {
-	const onePainting = new models.Painting(req.body);
-	onePainting.save((err, painting) => {
+	// const onePainting = new models.Painting(req.body);
+	const voiceSpeed = req.body.voiceSpeed;
+	const voiceName = (_.values(querystring.parse(req.body.im))[0]).split('.')[0];
+	const voiceText = req.body.descr;
+	const onePainting = _.cloneDeep(req.body);
+	generateVoice(voiceText, voiceName + '.mp3', voiceSpeed);
+	onePainting.voice = `/view/audio?fn=${voiceName}`;
+	delete onePainting.voiceSpeed;
+	new models.Painting(onePainting).save((err, painting) => {
 		let code = CODE.SUCCESS;
 		if (err) {
 			code = CODE.ERROR
