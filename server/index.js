@@ -265,15 +265,17 @@ app.patch('/view/editPainting', (req, res) => {
 });
 
 // 抽取删除图片公共函数
-function deleteLocalFile(query_im, query_imMin) {
+function deleteLocalFile(query_im, query_imMin, delete_voice = false) {
 	const im_name = _.values(querystring.parse(decodeURIComponent(query_im)))[0];
 	const imMin_name = _.values(querystring.parse(decodeURIComponent(query_imMin)))[0];
 	const im_path = path.resolve(__dirname, '../static/uploads/', im_name);
 	const imMin_path = path.resolve(__dirname, '../static/uploads/', imMin_name);
-	const voice_path = path.resolve(__dirname, '../static/voice/', im_name.split('.')[0] + '.mp3');
 	fs.unlink(im_path);
 	fs.unlink(imMin_path);
-	fs.unlink(voice_path);
+	if (delete_voice) {
+		const voice_path = path.resolve(__dirname, '../static/voice/', im_name.split('.')[0] + '.mp3');
+		fs.unlink(voice_path);
+	}
 }
 
 // 删除某个艺术家，及其对应的所有画作及其图片
@@ -281,8 +283,24 @@ app.delete('/view/deleteArtist', (req, res) => {
 	const aid = req.query.aid;
 	deleteLocalFile(req.query.im, req.query.imMin);
 	models.Artist.findByIdAndRemove({ _id: aid }, (err) => {
-		let code = CODE.SUCCESS;
-		if (err) code = CODE.ERROR;
+		let code = '';
+		if (err) {
+			code = CODE.ERROR;
+		} else {
+			code = CODE.SUCCESS;
+			// 为了对应把画作的图片及音频删掉也是累啊
+			models.Painting.find({ aid: aid }, (err, p) => {
+				if (err) return;
+				p.forEach(obj => {
+					deleteLocalFile(obj.im, obj.imMin);
+				})
+				// 最后再把数据库里相关数据删掉
+				models.Painting.deleteMany({ aid: aid }, (err) => {
+					if (err) return;
+					console.log(`已删除该艺术家（id：${aid}）的所有作品`);
+				});
+			});
+		}
 		res.json({
 			code: code
 		});
@@ -292,7 +310,7 @@ app.delete('/view/deleteArtist', (req, res) => {
 // 删除某幅画作以及其图片
 app.delete('/view/deletePainting', (req, res) => {
 	const pid = req.query.pid;
-	deleteLocalFile(req.query.im, req.query.imMin);
+	deleteLocalFile(req.query.im, req.query.imMin, true);
 	models.Painting.findByIdAndRemove({ _id: pid }, (err) => {
 		let code = CODE.SUCCESS;
 		if (err) code = CODE.ERROR;

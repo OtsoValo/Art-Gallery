@@ -59,7 +59,7 @@ export default {
 			this.$router.push({ path: name });
 		},
 		changeMenu() {
-			this.defaultLink = this.$route.path;
+			this.defaultLink = this.$route.path.split('/')[1];
 		}
 	},
 	watch: {
