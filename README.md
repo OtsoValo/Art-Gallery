@@ -1,6 +1,6 @@
-# artoex
+# Artoex
 
-> Painting gallery
+> 使用技术栈为Nodejs + Express + Mongoose。目前正在完善中。
 
 ## 基于互联网的图像演播系统的设计
 
@@ -13,4 +13,8 @@
 + 数据库系统具有添加、保存、修改、删除等功能 ，以处理图像的相关信息，包括图像文件、图像文件名，以及说明文字、解说音频等。
 + 播放系统可以按用户的要求，按指定的顺序或方式播放用户选择的图像以及说明文字和解说
 
+---
 
+<img src="./static/site1.jpg" />
+<img src="./static/site2.jpg" />
+<img src="./static/site3.jpg" />
