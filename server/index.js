@@ -190,12 +190,17 @@ app.get('/view/uploadImg', (req, res) => {
 	});
 });
 
+// 语音生成
+function makeVoiceText(vod) {
+	return `画作《${vod.name}》由艺术家${vod.author}于${new Date(vod.begin).getFullYear()}年到${new Date(vod.end).getFullYear()}年创作。艺术创作风格为${vod.style}，尺寸${vod.size.width}乘以${vod.size.height}${vod.size.rule}，现收藏于${vod.site}······
+	关于此画作，${vod.descr}`;
+}
+
 // 存入画作
 app.post('/view/newPainting', (req, res) => {
-	// const onePainting = new models.Painting(req.body);
 	const voiceSpeed = req.body.voiceSpeed;
 	const voiceName = (_.values(querystring.parse(req.body.im))[0]).split('.')[0];
-	const voiceText = req.body.descr;
+	const voiceText = makeVoiceText(req.body);
 	const onePainting = _.cloneDeep(req.body);
 	generateVoice(voiceText, voiceName + '.mp3', voiceSpeed);
 	onePainting.voice = `/view/audio?fn=${voiceName}`;
@@ -242,8 +247,14 @@ app.patch('/view/editArtist', (req, res) => {
 
 // 修改画作
 app.patch('/view/editPainting', (req, res) => {
-	const thePainting = req.body;
+	const voiceSpeed = req.body.voiceSpeed;
+	const voiceName = (_.values(querystring.parse(req.body.im))[0]).split('.')[0];
+	const voiceText = makeVoiceText(req.body);
+	const thePainting = _.cloneDeep(req.body);
 	const pid = thePainting._id;
+	generateVoice(voiceText, voiceName + '.mp3', voiceSpeed);
+	thePainting.voice = `/view/audio?fn=${voiceName}`;
+	delete thePainting.voiceSpeed;
 	models.Painting.update({ _id: pid }, thePainting, (err) => {
 		let code = CODE.SUCCESS;
 		if (err) code = CODE.ERROR;
@@ -259,8 +270,10 @@ function deleteLocalFile(query_im, query_imMin) {
 	const imMin_name = _.values(querystring.parse(decodeURIComponent(query_imMin)))[0];
 	const im_path = path.resolve(__dirname, '../static/uploads/', im_name);
 	const imMin_path = path.resolve(__dirname, '../static/uploads/', imMin_name);
+	const voice_path = path.resolve(__dirname, '../static/voice/', im_name.split('.')[0] + '.mp3');
 	fs.unlink(im_path);
 	fs.unlink(imMin_path);
+	fs.unlink(voice_path);
 }
 
 // 删除某个艺术家，及其对应的所有画作及其图片

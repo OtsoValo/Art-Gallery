@@ -17,11 +17,13 @@
 			</Form-item>
 			<Form-item label="画作作者">
 				<Radio-group v-model="painting.author">
-					<Poptip trigger="hover" content="如若没有指定作者，请先添加该艺术家" placement="top">
+					<Poptip trigger="hover"
+					        content="如若没有指定作者，请先添加该艺术家"
+					        placement="top">
 						<Radio v-for="(artist, index) in artists"
 						       :label="artist.name"
 						       :key="index"></Radio>
-					</Poptip >
+					</Poptip>
 				</Radio-group>
 			</Form-item>
 			<Form-item label="画作尺寸">
@@ -67,10 +69,14 @@
 			<Form-item label="生成语音速度">
 				<Slider v-model="painting.voiceSpeed"
 				        :step="10"
-						:min="10"
-						:max="90"
+				        :min="10"
+				        :max="90"
 				        show-stops
 				        :tip-format="formatVoice"></Slider>
+				<Alert show-icon style="width: 800px;">
+					语音生成规则
+					<template slot="desc">语音根据以上填写的所有文本自动生成（画作名称 + 画作作者 + 画作尺寸 + 创作时间 + 画作风格 + 馆藏地址 + 画作描述）。语音生成模型为：“画作《呐喊》由艺术家爱德华·蒙克于1893年到1893年创作。风格为表现主义，尺寸91乘以73.5 cm，现收藏于蒙克博物馆···（接下来是一长段的画作描述）”。</template>
+				</Alert>
 			</Form-item>
 			<Form-item>
 				<Button type="primary"
@@ -110,7 +116,7 @@ export default {
 				style: '',
 				descr: '',
 				site: '',
-				voiceSpeed: 20
+				voiceSpeed: 40
 			},
 			artists: []
 		};
@@ -127,7 +133,7 @@ export default {
 		savePainting() {
 			let paintingData = _.cloneDeep(this.painting);
 			paintingData.aid = (_.find(this.artists, a => { return a.name === paintingData.author; })).id;
-			paintingData.voiceSpeed = paintingData.voiceSpeed/10;
+			paintingData.voiceSpeed = paintingData.voiceSpeed / 10;
 			this.$http.post('/view/newPainting', paintingData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
 					this.$Notice.success({ title: TIPS.SAVE_PAINTING_SUCC });
