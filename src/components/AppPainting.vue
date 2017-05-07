@@ -135,7 +135,7 @@
 				</Row>
 			</div>
 			<div slot="footer">
-				<Row>
+				<Row v-if="user_login">
 					<Col span="12">
 					<Button icon="edit"
 					        style="margin-right:10px;"
@@ -173,7 +173,8 @@
 			</div>
 		</Modal>
 	
-		<AudioPlayer ref="audioPlayer" class="m-audioplayer"
+		<AudioPlayer ref="audioPlayer"
+		             class="m-audioplayer"
 		             :audio-src="modalData.voice"
 		             :audio-name="modalData.name"></AudioPlayer>
 		<Back-top></Back-top>
@@ -212,6 +213,11 @@ export default {
 		timeNormal(val) {
 			const dval = new Date(val);
 			return `${dval.getFullYear()}`;
+		}
+	},
+	computed: {
+		'user_login': function(){
+			return this.$eventhub.global_is_loading;
 		}
 	},
 	watch: {
@@ -293,6 +299,10 @@ export default {
 				this.stepCur++;
 			}
 		}, 3000);
+
+		// this.$http.get('/view/meet').then(res => {
+		// 	res.data.code === 200 ? this.user_login = true : this.user_login = false;
+		// });
 	}
 }
 </script>
@@ -377,7 +387,7 @@ export default {
 		margin: 10px;
 		text-align: left;
 		.u-intro {
-			margin-top: 5px;
+			margin-top: 6px;
 		}
 	}
 }

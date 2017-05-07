@@ -28,7 +28,7 @@ router.afterEach((to, from, next) => {
 });
 
 Vue.prototype.$http = axios;
-Vue.prototype.$hub = eventHub;
+Vue.prototype.$eventhub = eventHub;
 
 /* eslint-disable no-new */
 new Vue({

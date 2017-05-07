@@ -87,6 +87,7 @@
 				        @click="doLogin">确认</Button>
 			</div>
 		</Modal>
+
 		<!--注册弹窗-->
 		<Modal v-model="registModal"
 		       width="360">
@@ -141,6 +142,7 @@
 				        @click="doLogout">登出</Button>
 			</div>
 		</Modal>
+
 		<div class="app-view">
 			<router-view></router-view>
 		</div>
@@ -215,6 +217,7 @@ export default {
 					this.user.account = resd.data.account;
 					this.user.uid = resd.data.uid;
 					this.isLogin = true;
+					this.$eventhub.global_is_loading = true;
 					this.loginModal = false;
 				} else if (resd.code === 400) {
 					this.$Notice.error({
@@ -243,6 +246,7 @@ export default {
 						title: '登出成功'
 					});
 					this.isLogin = false;
+					this.$eventhub.global_is_loading = false;
 					this.user = {
 						account: '游客',
 						uid: 'noop~'
@@ -269,6 +273,7 @@ export default {
 				this.user.account = resd.account;
 				this.user.uid = resd.uid;
 				this.isLogin = true;
+				this.$eventhub.global_is_loading = true;
 			} else {
 				this.isLogin = false;
 			}

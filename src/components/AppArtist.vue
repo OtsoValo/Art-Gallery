@@ -16,10 +16,12 @@
 				<figure class="w-im">
 					<img :src="artistData.im">
 				</figure>
-				<Button class="w-modify"
+				<Button v-if="user_login"
+				        class="w-modify"
 				        icon="edit"
 				        @click="updateArtist(artistData._id)">修改艺术家信息</Button>
-				<Button class="w-modify"
+				<Button v-if="user_login"
+				        class="w-modify"
 				        type="error"
 				        icon="trash-a"
 				        @click="deleteModal = true">删除该艺术家</Button>
@@ -52,8 +54,8 @@
 							<Tag class="u-tag"
 							     type="dot">{{work}}</Tag>
 							<span class="u-stars">
-								<Icon type="ios-star" v-for="n in 4" :key="n"></Icon><Icon type="ios-star"></Icon>
-							</span>
+									<Icon type="ios-star" v-for="n in 4" :key="n"></Icon><Icon type="ios-star"></Icon>
+								</span>
 						</li>
 					</ul>
 				</Card>
@@ -106,6 +108,11 @@ export default {
 	watch: {
 		'$route': 'routeArtist'
 	},
+	computed: {
+		'user_login': function(){
+			return this.$eventhub.global_is_loading;
+		}
+	},
 	methods: {
 		// 用于从其他页面指定路由跳转过来相应艺术家
 		routeArtist() {
@@ -133,7 +140,7 @@ export default {
 				this.del_loading = false;
 				this.deleteModal = false;
 				this.getAllArtists(false);
-				if(res.data.code === 200){
+				if (res.data.code === 200) {
 					this.$Notice.success({ title: TIPS.DELETE_ARTIST_SUCC });
 				} else {
 					this.$Notice.error({ title: TIPS.DELETE_ARTIST_FAIL });
@@ -158,6 +165,9 @@ export default {
 	},
 	mounted() {
 		this.getAllArtists();
+		// this.$http.get('/view/meet').then(res => {
+		// 	res.data.code === 200 ? this.user_login = true : this.user_login = false;
+		// });
 	}
 }
 </script>
