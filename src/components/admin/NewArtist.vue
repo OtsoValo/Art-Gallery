@@ -3,7 +3,7 @@
 		<Form :label-width="120"
 		      class="w-form">
 			<Form-item label="上传艺术家肖像">
-				<Upload action="/view/fileUpload/artist"
+				<Upload action="/view/user/fileUpload/artist"
 				        :on-success="uploadSucc"
 				        name="artist">
 					<Button type="ghost"
@@ -136,7 +136,7 @@ export default {
 			let comma = artistData.works.includes(',') ? ',' : '，';
 			artistData.works = artistData.works.split(comma);
 			delete artistData.bigStoryNum;
-			this.$http.post('/view/newArtist', artistData).then(res => {
+			this.$http.post('/view/user/newArtist', artistData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
 					this.$Notice.success({ title: TIPS.SAVE_ARTIST_SUCC });
 					// 重置所有表单信息

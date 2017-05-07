@@ -21,6 +21,7 @@
 				无尽探索
 			</Menu-item>
 			<Submenu name="admin"
+			         v-if="isLogin === true"
 			         style="z-index: 99;">
 				<template slot="title">
 					<Icon type="ios-gear"></Icon>
@@ -41,13 +42,16 @@
 			<div class="power-admin">
 				<Poptip trigger="hover"
 				        placement="bottom"
-				        :content="user.id">
+				        :content="user.uid">
 					<a class="w-user-identify"
-					   href="javascript:void(0);">{{user.account}} :) </a>
+					   href="javascript:void(0);"
+					   @click="canDoLogout">{{user.account}} :) </a>
 				</Poptip>
 				<Button type="ghost"
+				        v-if="isLogin === false"
 				        @click="registModal = true">注册</Button>
 				<Button type="ghost"
+				        v-if="isLogin === false"
 				        @click="loginModal = true">登录</Button>
 				<img class="w-logo"
 				     src="./assets/favicon.png"
@@ -117,6 +121,26 @@
 			</div>
 		</Modal>
 	
+		<!--登出弹窗-->
+		<Modal v-model="logoutModal"
+		       width="360">
+			<p slot="header"
+			   style="color:#f60;text-align:center">
+				<Icon type="information-circled"></Icon>
+				<span>登出</span>
+			</p>
+			<div style="text-align:center">
+				<p>登出后，无法对画作及艺术家等数据进行操作。</p>
+				<p>是否继续登出？</p>
+			</div>
+			<div slot="footer">
+				<Button type="error"
+				        size="large"
+				        long
+				        :loading="logout.loading"
+				        @click="doLogout">登出</Button>
+			</div>
+		</Modal>
 		<div class="app-view">
 			<router-view></router-view>
 		</div>
@@ -130,10 +154,11 @@ export default {
 			defaultLink: 'painting',
 			loginModal: false,
 			registModal: false,
+			logoutModal: false,
 			isLogin: false,
 			user: {
 				account: '游客',
-				id: 'noop~'
+				uid: 'noop~'
 			},
 			login: {
 				account: '',
@@ -144,6 +169,9 @@ export default {
 				account: '',
 				pwd: '',
 				email: '',
+				loading: false
+			},
+			logout: {
 				loading: false
 			}
 		};
@@ -159,23 +187,74 @@ export default {
 			const registData = _.cloneDeep(this.regist);
 			this.regist.loading = true;
 			delete registData.loading;
-			this.$http.post('/view/user/regist', registData).then(res => {
+			this.$http.post('/view/regist', registData).then(res => {
 				if (res.data.code === 200) {
 					this.$Notice.success({
 						title: '注册成功啦，赶紧去登录吧~'
 					});
-					this.regist.loading = false;
 					this.registModal = false;
 					this.loginModal = true;
 				} else {
 					this.$Notice.warning({
 						titls: '注册失败啦，请重新尝试！'
-					})
+					});
 				}
+				this.regist.loading = false;
 			});
 		},
 		doLogin() {
-
+			const loginData = _.cloneDeep(this.login);
+			this.login.loading = true;
+			delete loginData.loading;
+			this.$http.post('/view/login', loginData).then(res => {
+				const resd = res.data;
+				if (resd.code === 200) {
+					this.$Notice.success({
+						title: '登录成功，现拥有操作后台权限'
+					});
+					this.user.account = resd.data.account;
+					this.user.uid = resd.data.uid;
+					this.isLogin = true;
+					this.loginModal = false;
+				} else if (resd.code === 400) {
+					this.$Notice.error({
+						title: '账号密码匹配失败，请重新尝试！'
+					});
+				} else {
+					this.$Notice.warning({
+						title: '服务器出错，请重新尝试'
+					});
+				}
+				this.login.loading = false;
+			});
+		},
+		canDoLogout() {
+			if (this.isLogin) {
+				this.logoutModal = true;
+			}
+		},
+		doLogout() {
+			if (!this.isLogin) return;
+			this.logout.loading = true;
+			this.$http.post('/view/logout').then(res => {
+				const resd = res.data;
+				if (resd.code === 200) {
+					this.$Notice.success({
+						title: '登出成功'
+					});
+					this.isLogin = false;
+					this.user = {
+						account: '游客',
+						uid: 'noop~'
+					};
+					this.logoutModal = false;
+				} else {
+					this.$Notice.warning({
+						title: '服务器出错，请重新尝试'
+					});
+				}
+				this.logout.loading = false;
+			});
 		}
 	},
 	watch: {
@@ -184,6 +263,16 @@ export default {
 	mounted() {
 		const curPath = this.$route.path;
 		this.defaultLink = curPath.split('/')[1];
+		this.$http.get('/view/meet').then(res => {
+			const resd = res.data;
+			if (resd.code === 200) {
+				this.user.account = resd.account;
+				this.user.uid = resd.uid;
+				this.isLogin = true;
+			} else {
+				this.isLogin = false;
+			}
+		});
 	}
 }
 </script>

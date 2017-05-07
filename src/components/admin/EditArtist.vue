@@ -3,7 +3,7 @@
 		<Form :label-width="120"
 		      class="w-form">
 			<Form-item label="修改艺术家肖像">
-				<Upload action="/view/fileUpload/artist"
+				<Upload action="/view/user/fileUpload/artist"
 				        :on-success="uploadSucc"
 				        name="artist">
 					<Button type="ghost"
@@ -138,7 +138,7 @@ export default {
 			let comma = artistData.works.includes(',') ? ',' : '，';
 			artistData.works = artistData.works.split(comma);
 			delete artistData.bigStoryNum;
-			this.$http.patch('/view/editArtist', artistData).then(res => {
+			this.$http.patch('/view/user/editArtist', artistData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
 					this.$Notice.success({ title: TIPS.UPDATE_ARTIST_SUCC });
 					// 成功后跳转回艺术家组件

@@ -4,30 +4,36 @@ const fs = require('fs');
 const querystring = require('querystring');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-
 const _ = require('lodash');
 const images = require('images');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 // 数据库处理
 const dbsv = require('./dbsv');
 const models = require('./models');
 const generateVoice = require('./voiceFactory');
+const authen = require('./authen');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.enable('trust proxy');
+app.set('trust proxy', 1);
 app.use(session({
-	secret: 'special key',
+	secret: 'artoex key',
+	store: new MongoStore({
+		url: 'mongodb://localhost:27017/artoex'
+	}),
 	resave: false,
-	saveUninitialized: true,
-	cookie: { secure: true, maxAge: 1000 * 60 * 60 }
+	saveUninitialized: false,
+	cookie: { maxAge: 5 * 60000 }
 }));
 
 const CODE = {
 	SUCCESS: 200,
-	ERROR: 500
+	ERROR: 500,
+	FAIL: 400,
+	UNLOGIN: 100
 };
 const MIN_QUAL = 80;
 const MIN_WIDTH = 300;
@@ -51,9 +57,41 @@ app.use(function (req, res, next) {
 	next();
 });
 
+function loadUser(req, res, next) {
+	if (req.session.sid) {
+		const sid = req.session.sid;
+		const user = {
+			account: sid.split(';')[0],
+			uid: sid.split(';')[1]
+		};
+		res.json({
+			code: CODE.SUCCESS,
+			account: user.account,
+			uid: user.uid
+		});
+	} else {
+		res.json({
+			code: CODE.FAIL
+		});
+	}
+}
+function requireAuthen(req, res, next) {
+	if (req.session.sid) {
+		next();
+	} else {
+		res.json({
+			code: CODE.UNLOGIN
+		});
+	}
+}
+app.get('/view/meet', loadUser);
+app.all('/view/user/*', requireAuthen);
+
 // 来来来用户注册
-app.post('/view/user/regist', (req, res) => {
-	new models.User(req.body).save((err, user) => {
+app.post('/view/regist', (req, res) => {
+	const ud = _.cloneDeep(req.body);
+	ud.pwd = authen.cryptPwd(ud.pwd);
+	new models.User(ud).save((err, user) => {
 		if (err) {
 			res.json({
 				code: CODE.ERROR,
@@ -62,18 +100,62 @@ app.post('/view/user/regist', (req, res) => {
 		} else {
 			res.json({
 				code: CODE.SUCCESS,
-				data: user
+				data: {
+					account: user.account,
+					email: user.email
+				}
 			});
 		}
 	});
 });
 
 // 来来来用户登录
-app.post('/view/user/login', (req, res) => {
+app.post('/view/login', (req, res) => {
 	const account = req.body.account;
 	const pwd = req.body.pwd;
-	const uid = req.body.uid
 	// 检查用户账号和密码是否和数据库中相匹配
+	models.User.findOne({ account: account }, (err, user) => {
+		if (err) {
+			res.json({
+				code: CODE.ERROR,
+				data: {}
+			});
+		} else {
+			// 检测用户账号和密码是否匹配
+			if (authen.cryptPwd(pwd) === user.pwd) {
+				// 登录成功同时开启session
+				req.session.sid = `${user.account};${user._id}`;
+				res.json({
+					code: CODE.SUCCESS,
+					data: {
+						account: user.account,
+						uid: user._id
+					}
+				});
+			} else {
+				// 登录失败
+				res.json({
+					code: CODE.FAIL,
+					data: {}
+				});
+			}
+		}
+	})
+});
+
+// 来来来用户登出
+app.post('/view/logout', (req, res) => {
+	req.session.destroy(err => {
+		if (err) {
+			res.json({
+				code: CODE.ERROR
+			});
+		} else {
+			res.json({
+				code: CODE.SUCCESS
+			});
+		}
+	});
 });
 
 // 单张缩略图
@@ -200,7 +282,7 @@ app.get('/view/artistInfo', (req, res) => {
 });
 
 // 接收画作图片上传并实现压缩制作缩略图
-app.post('/view/fileUpload/painting', upload.single('painting'), (req, res) => {
+app.post('/view/user/fileUpload/painting', upload.single('painting'), (req, res) => {
 	const fileName = req.file.filename;
 	const filePath = req.file.path;
 	const affix = /\.[^\.]+$/.exec(fileName)[0];
@@ -215,7 +297,7 @@ app.post('/view/fileUpload/painting', upload.single('painting'), (req, res) => {
 });
 
 // 接收艺术家图片上传并实现压缩制作缩略图
-app.post('/view/fileUpload/artist', upload.single('artist'), (req, res) => {
+app.post('/view/user/fileUpload/artist', upload.single('artist'), (req, res) => {
 	const fileName = req.file.filename;
 	const filePath = req.file.path;
 	const affix = /\.[^\.]+$/.exec(fileName)[0];
@@ -246,7 +328,7 @@ function makeVoiceText(vod) {
 }
 
 // 存入画作
-app.post('/view/newPainting', (req, res) => {
+app.post('/view/user/newPainting', (req, res) => {
 	const voiceSpeed = req.body.voiceSpeed;
 	const voiceName = (_.values(querystring.parse(req.body.im))[0]).split('.')[0];
 	const voiceText = makeVoiceText(req.body);
@@ -270,7 +352,7 @@ app.post('/view/newPainting', (req, res) => {
 });
 
 // 存入艺术家
-app.post('/view/newArtist', (req, res) => {
+app.post('/view/user/newArtist', (req, res) => {
 	const oneArtist = new models.Artist(req.body);
 	oneArtist.save((err, artist) => {
 		if (err) {
@@ -288,7 +370,7 @@ app.post('/view/newArtist', (req, res) => {
 });
 
 // 修改艺术家
-app.patch('/view/editArtist', (req, res) => {
+app.patch('/view/user/editArtist', (req, res) => {
 	const theArtist = req.body;
 	const aid = theArtist._id;
 	models.Artist.update({ _id: aid }, theArtist, (err) => {
@@ -305,7 +387,7 @@ app.patch('/view/editArtist', (req, res) => {
 });
 
 // 修改画作
-app.patch('/view/editPainting', (req, res) => {
+app.patch('/view/user/editPainting', (req, res) => {
 	const voiceSpeed = req.body.voiceSpeed;
 	const voiceName = (_.values(querystring.parse(req.body.im))[0]).split('.')[0];
 	const voiceText = makeVoiceText(req.body);
@@ -342,7 +424,7 @@ function deleteLocalFile(query_im, query_imMin, delete_voice = false) {
 }
 
 // 删除某个艺术家，及其对应的所有画作及其图片
-app.delete('/view/deleteArtist', (req, res) => {
+app.delete('/view/user/deleteArtist', (req, res) => {
 	const aid = req.query.aid;
 	deleteLocalFile(req.query.im, req.query.imMin);
 	models.Artist.findByIdAndRemove({ _id: aid }, (err) => {
@@ -372,7 +454,7 @@ app.delete('/view/deleteArtist', (req, res) => {
 });
 
 // 删除某幅画作以及其图片
-app.delete('/view/deletePainting', (req, res) => {
+app.delete('/view/user/deletePainting', (req, res) => {
 	const pid = req.query.pid;
 	deleteLocalFile(req.query.im, req.query.imMin, true);
 	models.Painting.findByIdAndRemove({ _id: pid }, (err) => {

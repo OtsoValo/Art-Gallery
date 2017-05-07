@@ -3,7 +3,7 @@
 		<Form :label-width="120"
 		      class="w-form">
 			<Form-item label="修改画作图片">
-				<Upload action="/view/fileUpload/painting"
+				<Upload action="/view/user/fileUpload/painting"
 				        :on-success="uploadSucc"
 				        name="painting">
 					<Button type="ghost"
@@ -139,7 +139,7 @@ export default {
 		updatePainting() {
 			let paintingData = _.cloneDeep(this.painting);
 			paintingData.voiceSpeed = paintingData.voiceSpeed/10;
-			this.$http.patch('/view/editPainting', paintingData).then(res => {
+			this.$http.patch('/view/user/editPainting', paintingData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
 					this.$Notice.success({ title: TIPS.UPDATE_PAINTING_SUCC });
 					this.$router.push({ path: '/painting' });

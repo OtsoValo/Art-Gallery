@@ -3,7 +3,7 @@
 		<Form :label-width="120"
 		      class="w-form">
 			<Form-item label="上传画作">
-				<Upload action="/view/fileUpload/painting"
+				<Upload action="/view/user/fileUpload/painting"
 				        :on-success="uploadSucc"
 				        name="painting">
 					<Button type="ghost"
@@ -134,7 +134,7 @@ export default {
 			let paintingData = _.cloneDeep(this.painting);
 			paintingData.aid = (_.find(this.artists, a => { return a.name === paintingData.author; })).id;
 			paintingData.voiceSpeed = paintingData.voiceSpeed / 10;
-			this.$http.post('/view/newPainting', paintingData).then(res => {
+			this.$http.post('/view/user/newPainting', paintingData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
 					this.$Notice.success({ title: TIPS.SAVE_PAINTING_SUCC });
 					// 重置所有表单信息

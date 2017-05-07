@@ -128,7 +128,7 @@ export default {
 			this.del_loading = true;
 			const im = encodeURIComponent(this.artistData.im);
 			const imMin = encodeURIComponent(this.artistData.imMin);
-			this.$http.delete(`/view/deleteArtist?aid=${aid}&im=${im}&imMin=${imMin}`).then(res => {
+			this.$http.delete(`/view/user/deleteArtist?aid=${aid}&im=${im}&imMin=${imMin}`).then(res => {
 				// 重新刷新获取所有艺术家
 				this.del_loading = false;
 				this.deleteModal = false;

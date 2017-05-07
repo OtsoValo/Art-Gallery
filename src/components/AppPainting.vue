@@ -261,7 +261,7 @@ export default {
 			const im = encodeURIComponent(this.modalData.im);
 			const imMin = encodeURIComponent(this.modalData.imMin);
 			this.del_loading = true;
-			this.$http.delete(`/view/deletePainting?pid=${pid}&im=${im}&imMin=${imMin}`).then(res => {
+			this.$http.delete(`/view/user/deletePainting?pid=${pid}&im=${im}&imMin=${imMin}`).then(res => {
 				this.del_loading = false;
 				this.deleteModal = false;
 				this.paintingModal = false;
@@ -302,7 +302,7 @@ export default {
 	position: relative;
 	.m-audioplayer {
 		position: fixed;
-		z-index: 9999;
+		z-index: 1000;
 		left: 20px;
 		bottom: 20px;
 	}
