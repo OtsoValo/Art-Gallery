@@ -312,7 +312,7 @@ export default {
 	position: relative;
 	.m-audioplayer {
 		position: fixed;
-		z-index: 1000;
+		z-index: 2001;
 		left: 20px;
 		bottom: 20px;
 	}

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const models = require('./models');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/artoex');
 const db = mongoose.connection;

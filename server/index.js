@@ -26,7 +26,7 @@ app.use(session({
 	}),
 	resave: false,
 	saveUninitialized: false,
-	cookie: { maxAge: 5 * 60000 }
+	cookie: { maxAge: 60 * 60000 }
 }));
 
 const CODE = {

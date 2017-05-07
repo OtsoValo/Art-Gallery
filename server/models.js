@@ -22,10 +22,6 @@ const ArtistSchema = mongoose.Schema({
 	works: Array
 });
 
-ArtistSchema.statics.findByName = function(name, cb){
-	return this.find({ name: new RegExp(name, 'ig')}, cb);
-};
-
 // 绘画
 const PaintingSchema = mongoose.Schema({
 	name: String,
@@ -54,7 +50,7 @@ const PaintingSchema = mongoose.Schema({
 		type: String,
 		default: '木有找到~'
 	}
-})
+});
 
 module.exports = {
 	User: mongoose.model('User', UserSchema),
