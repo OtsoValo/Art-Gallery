@@ -140,6 +140,10 @@ export default {
 			delete artistData.bigStoryNum;
 			this.$http.patch('/view/user/editArtist', artistData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
+					if(res.data.code === 100){
+						this.$Notice.warning({ title: TIPS.NO_RIGHT });
+						return;
+					}
 					this.$Notice.success({ title: TIPS.UPDATE_ARTIST_SUCC });
 					// 成功后跳转回艺术家组件
 					this.$router.push({ path: '/artist', query: { aid: this.artist._id } });

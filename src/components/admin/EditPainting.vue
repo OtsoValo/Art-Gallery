@@ -141,6 +141,10 @@ export default {
 			paintingData.voiceSpeed = paintingData.voiceSpeed/10;
 			this.$http.patch('/view/user/editPainting', paintingData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
+					if(res.data.code === 100){
+						this.$Notice.warning({ title: TIPS.NO_RIGHT });
+						return;
+					}
 					this.$Notice.success({ title: TIPS.UPDATE_PAINTING_SUCC });
 					this.$router.push({ path: '/painting' });
 				} else {

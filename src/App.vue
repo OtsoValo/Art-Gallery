@@ -1,6 +1,7 @@
 <template>
 	<div id="app">
 		<Menu mode="horizontal"
+		      class="global-nav"
 		      theme="light"
 		      :active-name="defaultLink"
 		      @on-select="routePage">
@@ -87,7 +88,7 @@
 				        @click="doLogin">确认</Button>
 			</div>
 		</Modal>
-
+	
 		<!--注册弹窗-->
 		<Modal v-model="registModal"
 		       width="360">
@@ -142,7 +143,7 @@
 				        @click="doLogout">登出</Button>
 			</div>
 		</Modal>
-
+	
 		<div class="app-view">
 			<router-view></router-view>
 		</div>
@@ -284,6 +285,17 @@ export default {
 
 <style scoped lang="scss">
 #app {
+	.global-nav {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 1000;
+	}
+	.app-view{
+		margin-top: 60px;
+		overflow: hidden;
+	}
 	.power-admin {
 		float: right;
 		height: 100%;

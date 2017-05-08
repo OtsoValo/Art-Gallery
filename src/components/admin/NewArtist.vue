@@ -93,8 +93,8 @@ export default {
 				name: '',
 				im: '',
 				imMin: '',
-				birth: '',
-				death: '',
+				birth: (new Date()).setFullYear(1900),
+				death: (new Date()).setFullYear(1900),
 				intro: '',
 				bigStoryNum: 30,
 				bigStories: [],
@@ -138,14 +138,18 @@ export default {
 			delete artistData.bigStoryNum;
 			this.$http.post('/view/user/newArtist', artistData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
+					if(res.data.code === 100){
+						this.$Notice.warning({ title: TIPS.NO_RIGHT });
+						return;
+					}
 					this.$Notice.success({ title: TIPS.SAVE_ARTIST_SUCC });
 					// 重置所有表单信息
 					this.artist = {
 						name: '',
 						im: '',
 						imMin: '',
-						birth: '',
-						death: '',
+						birth: (new Date()).setFullYear(1900),
+						death: (new Date()).setFullYear(1900),
 						intro: '',
 						bigStoryNum: 30,
 						bigStories: [],

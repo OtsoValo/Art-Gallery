@@ -122,7 +122,7 @@ export default {
 			}
 		},
 		choseArtist(aid) {
-			this.artistId = aid;
+			this.artistId = aid ? aid : this.artistId;
 			this.$router.push({ query: { aid: this.artistId } });
 			this.$http.get(`/view/artistInfo?id=${this.artistId}`).then(res => {
 				this.artistData = res.data.data;
@@ -165,9 +165,6 @@ export default {
 	},
 	mounted() {
 		this.getAllArtists();
-		// this.$http.get('/view/meet').then(res => {
-		// 	res.data.code === 200 ? this.user_login = true : this.user_login = false;
-		// });
 	}
 }
 </script>

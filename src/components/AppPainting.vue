@@ -191,7 +191,7 @@ export default {
 			greatIndex: 0,
 			carouselSize: 5,
 			page: 1,
-			pageSize: 40,
+			pageSize: 30,
 			totalSize: 0,
 			greatAry: [],
 			thumbAry: [],
@@ -248,8 +248,11 @@ export default {
 			this.modalData = thumb;
 			// 自动匹配图片宽度
 			this.$nextTick(() => {
-				const modalIm = document.getElementById('modal-im');
 				const outerWidth = 40;
+				const modalIm = document.getElementById('modal-im');
+				modalIm.onload = () => {
+					this.modalWidth = modalIm.width + outerWidth;
+				};
 				// 防止图片宽度为0时溢出，这个奇怪的bug哈
 				const imWidth = modalIm.width === 0 ? 1200 : modalIm.width;
 				this.modalWidth = imWidth + outerWidth;
@@ -299,10 +302,6 @@ export default {
 				this.stepCur++;
 			}
 		}, 3000);
-
-		// this.$http.get('/view/meet').then(res => {
-		// 	res.data.code === 200 ? this.user_login = true : this.user_login = false;
-		// });
 	}
 }
 </script>
@@ -360,9 +359,11 @@ export default {
 				box-shadow: 0 0 8px #888;
 			}
 			.u-thumbim {
-				height: 100%; // transition: height .3s ease;
+				height: 100%;
+				transform: scale(1, 1);
+				transition: transform .3s ease-in-out;
 				&:hover {
-					// width: 150%;
+					transform: scale(1.5, 1.5);
 				}
 			}
 		}

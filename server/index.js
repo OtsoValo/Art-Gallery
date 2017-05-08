@@ -19,14 +19,15 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('trust proxy', 1);
+const mongo_store = new MongoStore({
+	url: 'mongodb://localhost:27017/artoex'
+});
 app.use(session({
 	secret: 'artoex key',
-	store: new MongoStore({
-		url: 'mongodb://localhost:27017/artoex'
-	}),
+	store: mongo_store,
 	resave: false,
 	saveUninitialized: false,
-	cookie: { maxAge: 60 * 60000 }
+	cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
 const CODE = {
@@ -77,6 +78,8 @@ function loadUser(req, res, next) {
 }
 function requireAuthen(req, res, next) {
 	if (req.session.sid) {
+		// 刷新session
+		req.session.sid = req.session.sid;
 		next();
 	} else {
 		res.json({

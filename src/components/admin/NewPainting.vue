@@ -73,7 +73,8 @@
 				        :max="90"
 				        show-stops
 				        :tip-format="formatVoice"></Slider>
-				<Alert show-icon style="width: 800px;">
+				<Alert show-icon
+				       style="width: 800px;">
 					语音生成规则
 					<template slot="desc">语音根据以上填写的所有文本自动生成（画作名称 + 画作作者 + 画作尺寸 + 创作时间 + 画作风格 + 馆藏地址 + 画作描述）。语音生成模型为：“画作《呐喊》由艺术家爱德华·蒙克于1893年到1893年创作。风格为表现主义，尺寸91乘以73.5 cm，现收藏于蒙克博物馆···（接下来是一长段的画作描述）”。</template>
 				</Alert>
@@ -109,10 +110,10 @@ export default {
 				size: {
 					width: 0,
 					height: 0,
-					rule: ''
+					rule: 'cm'
 				},
-				begin: '',
-				end: '',
+				begin: (new Date()).setFullYear(1900),
+				end: (new Date()).setFullYear(1900),
 				style: '',
 				descr: '',
 				site: '',
@@ -126,6 +127,10 @@ export default {
 			return `语速 ${val / 10}`;
 		},
 		uploadSucc(res) {
+			if (res.code === 100) {
+				this.$Notice.warning({ title: TIPS.NO_RIGHT });
+				return;
+			}
 			this.$Notice.success({ title: TIPS.UPLOAD_PAINTING_SUCC });
 			this.painting.im = res.data;
 			this.painting.imMin = res.minData;
@@ -136,6 +141,10 @@ export default {
 			paintingData.voiceSpeed = paintingData.voiceSpeed / 10;
 			this.$http.post('/view/user/newPainting', paintingData).then(res => {
 				if (res.status >= 200 && res.status < 400) {
+					if (res.data.code === 100) {
+						this.$Notice.warning({ title: TIPS.NO_RIGHT });
+						return;
+					}
 					this.$Notice.success({ title: TIPS.SAVE_PAINTING_SUCC });
 					// 重置所有表单信息
 					this.painting = {
@@ -146,14 +155,14 @@ export default {
 						size: {
 							width: 0,
 							height: 0,
-							rule: ''
+							rule: 'cm'
 						},
-						begin: '',
-						end: '',
+						begin: (new Date()).setFullYear(1900),
+						end: (new Date()).setFullYear(1900),
 						style: '',
 						descr: '',
 						site: '',
-						voiceSpeed: 20
+						voiceSpeed: 40
 					};
 				} else {
 					this.$Notice.warning({ title: TIPS.NET_ERR });
