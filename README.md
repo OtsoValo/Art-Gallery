@@ -1,6 +1,6 @@
 # Artoex
 
-> 使用技术栈为Nodejs + Express + Mongoose。目前正在完善中。
+> 使用技术栈为：前端vuejs + iview，后台Nodejs + Express + MongoDB。目前正在完善中。
 
 ## 基于互联网的图像演播系统的设计
 

@@ -24,7 +24,7 @@
 				        icon="ios-analytics"></Button>
 				<Form :label-width="60">
 					<Form-item class="w-ctrlform"
-					           label="显示数量">
+					           label="(￣３￣)">
 						<Slider class="w-slider"
 						        v-model="ctrl.size"
 						        :min="30"
@@ -34,7 +34,7 @@
 						        :step="10"></Slider>
 					</Form-item>
 					<Form-item class="w-ctrlform"
-					           label="切换速度">
+					           label="(￣３￣)">
 						<Slider class="w-slider"
 						        v-model="ctrl.speed"
 						        :min="20"
@@ -280,10 +280,10 @@ export default {
 	},
 	methods: {
 		formatSizeTips(val) {
-			return `总共轮播 ${val / 10} 幅`;
+			return `总共轮播${val / 10}幅`;
 		},
 		formatSpeedTips(val) {
-			return `轮播速度每 ${val / 10} 秒一幅`;
+			return `轮播速度每${val / 10}秒一幅`;
 		},
 		changePage(page) {
 			this.page = page;
@@ -358,6 +358,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+$bouceInOut: cubic-bezier(0.68, -0.55, 0.27, 1.55);
 .app-painting {
 	position: relative;
 	.m-audioplayer {
@@ -377,7 +378,7 @@ export default {
 			justify-content: center;
 			cursor: pointer;
 			width: 100%;
-			height: 600px;
+			height: 640px;
 			overflow: hidden;
 			&>img {
 				display: block;
@@ -394,7 +395,7 @@ export default {
 			bottom: 20px; // border: 1px solid #39f;
 			box-shadow: 0 0 8px #888;
 			border-radius: 42px 0 0 42px;
-			transition: right .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+			transition: right .3s #{$bouceInOut};
 			.w-ctrlform {
 				margin-bottom: 0;
 				.w-slider {
@@ -440,7 +441,7 @@ export default {
 			.u-thumbim {
 				height: 100%;
 				transform: scale(1, 1);
-				transition: transform .3s ease-in-out;
+				transition: transform .3s ease-out;
 				&:hover {
 					transform: scale(1.5, 1.5);
 				}

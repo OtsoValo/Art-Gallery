@@ -295,7 +295,7 @@ export default {
 	left: 0;
 	right: 0;
 	z-index: 1000;
-	background: #f6f6f6;
+	background: #f9f9f9;
 	box-shadow: 0 #{$dir}px 8px #ccc;
 }
 
