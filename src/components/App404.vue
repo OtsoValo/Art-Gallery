@@ -1,5 +1,5 @@
 <template>
-	<div class="app-404">
+	<div class="app-404" ondragstart="return false;">
 		<figure class="m-404code">
 			<img src="../assets/404code.jpg"
 			     alt="404">
@@ -47,7 +47,7 @@ export default {
 .app-404 {
 	max-width: 1400px;
 	min-width: 1000px;
-	margin: 20px auto;
+	margin: 40px auto;
 	.m-404code {
 		img {
 			margin: 0 auto;

@@ -3,7 +3,7 @@
 		<!--轮播大图-->
 		<header class="m-carousel">
 			<Carousel autoplay
-			          :autoplay-speed="4000"
+			          :autoplay-speed="carouselSpeed"
 			          v-model="greatIndex">
 				<Carousel-item v-for="(great, index) in greatAry"
 				               :key="index">
@@ -14,6 +14,37 @@
 					</div>
 				</Carousel-item>
 			</Carousel>
+	
+			<div class="ctrl-carousel" :class="{'ctrl-carousel-hide': ctrl.hide}">
+				<Button class="ctrl-btn"
+				        type="ghost"
+				        shape="circle"
+						size="large"
+						@click="ctrl.hide = !ctrl.hide"
+				        icon="ios-analytics"></Button>
+				<Form :label-width="60">
+					<Form-item class="w-ctrlform"
+					           label="显示数量">
+						<Slider class="w-slider"
+						        v-model="ctrl.size"
+						        :min="30"
+						        :max="90"
+								show-stops
+						        :tip-format="formatSizeTips"
+						        :step="10"></Slider>
+					</Form-item>
+					<Form-item class="w-ctrlform"
+					           label="切换速度">
+						<Slider class="w-slider"
+						        v-model="ctrl.speed"
+						        :min="20"
+						        :max="100"
+								show-stops
+						        :tip-format="formatSpeedTips"
+						        :step="10"></Slider>
+					</Form-item>
+				</Form>
+			</div>
 		</header>
 	
 		<!--分割线-->
@@ -177,7 +208,6 @@
 		             class="m-audioplayer"
 		             :audio-src="modalData.voice"
 		             :audio-name="modalData.name"></AudioPlayer>
-		<Back-top></Back-top>
 	</div>
 </template>
 
@@ -189,7 +219,8 @@ export default {
 	data() {
 		return {
 			greatIndex: 0,
-			carouselSize: 5,
+			carouselSize: 6,
+			carouselSpeed: 4000,
 			page: 1,
 			pageSize: 30,
 			totalSize: 0,
@@ -205,7 +236,12 @@ export default {
 			modalWidth: 1200,
 			stepCur: 0,
 			deleteModal: false,
-			del_loading: false
+			del_loading: false,
+			ctrl: {
+				size: 60,
+				speed: 40,
+				hide: true
+			}
 		};
 	},
 	components: { AudioPlayer },
@@ -216,7 +252,7 @@ export default {
 		}
 	},
 	computed: {
-		'user_login': function(){
+		'user_login': function () {
 			return this.$eventhub.global_is_loading;
 		}
 	},
@@ -231,9 +267,24 @@ export default {
 					voice: '/view/audio?fn=stone_road'
 				};
 			}
+		},
+		'ctrl.size': function (val) {
+			this.carouselSize = val / 10;
+			this.$http.get(`/view/paintingList?size=${this.carouselSize}`).then(res => {
+				this.greatAry = res.data.data;
+			});
+		},
+		'ctrl.speed': function (val) {
+			this.carouselSpeed = val * 100;
 		}
 	},
 	methods: {
+		formatSizeTips(val) {
+			return `总共轮播 ${val / 10} 幅`;
+		},
+		formatSpeedTips(val) {
+			return `轮播速度每 ${val / 10} 秒一幅`;
+		},
 		changePage(page) {
 			this.page = page;
 			// 获取缩略图
@@ -313,9 +364,10 @@ export default {
 		position: fixed;
 		z-index: 2001;
 		left: 20px;
-		bottom: 20px;
+		bottom: 60px;
 	}
 	.m-carousel {
+		position: relative;
 		background: url('../assets/gplaypattern.png') repeat;
 		border-bottom: 1px solid #eee;
 		min-width: 1000px;
@@ -331,6 +383,33 @@ export default {
 				display: block;
 				height: 90%;
 			}
+		}
+		.ctrl-carousel {
+			position: absolute;
+			width: 360px;
+			height: auto;
+			background: #fff;
+			padding: 8px 64px 8px 64px;
+			right: -40px;
+			bottom: 20px; // border: 1px solid #39f;
+			box-shadow: 0 0 8px #888;
+			border-radius: 42px 0 0 42px;
+			transition: right .3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+			.w-ctrlform {
+				margin-bottom: 0;
+				.w-slider {
+					margin-top: -2px;
+				}
+			}
+			.ctrl-btn {
+				position: absolute;
+				top: 50%;
+				left: 12px;
+				transform: translateY(-50%);
+			}
+		}
+		.ctrl-carousel-hide {
+			right: -300px;
 		}
 	}
 

@@ -147,6 +147,12 @@
 		<div class="app-view">
 			<router-view></router-view>
 		</div>
+	
+		<footer class="glabal-copyright">
+			<p>Copyright &copy;2017-2018 <a href="https://github.com/Gotjoy/Art-Gallery">https://github.com/Gotjoy/Art-Gallery</a>. All Rights Reserved.</p>
+		</footer>
+
+		<Back-top style="bottom: 60px;"></Back-top>
 	</div>
 </template>
 
@@ -284,17 +290,23 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@mixin basic($dir) {
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	background: #f6f6f6;
+	box-shadow: 0 #{$dir}px 8px #ccc;
+}
+
 #app {
 	.global-nav {
-		position: fixed;
+		@include basic(2);
 		top: 0;
-		left: 0;
-		right: 0;
-		z-index: 1000;
 	}
-	.app-view{
-		margin-top: 60px;
-		overflow: hidden;
+	.app-view {
+		padding: 60px 0 36px;
+		overflow: auto;
 	}
 	.power-admin {
 		float: right;
@@ -307,6 +319,16 @@ export default {
 			float: right;
 			height: 36px;
 			margin: 12px;
+		}
+	}
+	.glabal-copyright {
+		@include basic(-2);
+		bottom: 0;
+		width: 100%;
+		height: 36px;
+		p {
+			text-align: center;
+			line-height: 36px;
 		}
 	}
 }
