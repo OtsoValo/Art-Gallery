@@ -85,10 +85,10 @@
 			</Form-item>
 		</Form>
 		<div class="w-display">
-			<Icon class="u-camera"
+			<!--<Icon class="u-camera"
 			      type="image"
 			      v-show="painting.im === ''"
-			      size="40"></Icon>
+			      size="40"></Icon>-->
 			<img :src="painting.im"
 			     v-show="painting.im">
 		</div>

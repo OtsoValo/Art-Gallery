@@ -2,21 +2,21 @@
 	.w-form {
 		float: left;
 		margin-right: 40px;
-		max-width: 900px;
+		max-width: 930px;
 	}
 	.w-display {
 		position: relative;
 		float: left;
 		width: 400px;
-		min-height: 400px;
+		// min-height: 400px;
 		border-radius: 4px;
-		border: 1px solid #ddd;
 		overflow: hidden;
-		background: url('../../assets/geometry.png') repeat;
+		// background: url('../../assets/geometry.png') repeat;
 		&>img {
 			display: block;
 			margin: 0;
 			width: 100%;
+			border: 1px solid #ddd;
 		}
 		.u-camera {
 			position: absolute;

@@ -82,7 +82,6 @@
 				        @click="deleteArtist(artistData._id)">删除</Button>
 			</div>
 		</Modal>
-		<Back-top></Back-top>
 	</div>
 </template>
 

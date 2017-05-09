@@ -27,7 +27,8 @@ app.use(session({
 	store: mongo_store,
 	resave: false,
 	saveUninitialized: false,
-	cookie: { maxAge: 1000 * 60 * 60 * 24 }
+	// 让它溜达一周
+	cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }
 }));
 
 const CODE = {
@@ -79,7 +80,7 @@ function loadUser(req, res, next) {
 function requireAuthen(req, res, next) {
 	if (req.session.sid) {
 		// 刷新session
-		req.session.sid = req.session.sid;
+		// req.session.sid = req.session.sid;
 		next();
 	} else {
 		res.json({
@@ -338,6 +339,8 @@ app.post('/view/user/newPainting', (req, res) => {
 	const onePainting = _.cloneDeep(req.body);
 	generateVoice(voiceText, voiceName + '.mp3', voiceSpeed);
 	onePainting.voice = `/view/audio?fn=${voiceName}`;
+	if(onePainting.style.length === 0) onePainting.style = '未知';
+	if(onePainting.descr.length === 0) onePainting.descr = '暂无描述。';
 	delete onePainting.voiceSpeed;
 	new models.Painting(onePainting).save((err, painting) => {
 		if (err) {

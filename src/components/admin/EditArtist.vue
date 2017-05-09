@@ -74,10 +74,10 @@
 		</Form>
 	
 		<div class="w-display">
-			<Icon class="u-camera"
+			<!--<Icon class="u-camera"
 			      type="image"
 			      v-show="artist.im === ''"
-			      size="40"></Icon>
+			      size="40"></Icon>-->
 			<img :src="artist.im"
 			     v-show="artist.im">
 		</div>

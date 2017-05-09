@@ -147,6 +147,7 @@ $shadow: 0 0 12px #444;
 		}
 		.shell-head,
 		.shell-tail {
+			cursor: pointer;
 			img.w-wheel {
 				position: absolute;
 				top: 50%;

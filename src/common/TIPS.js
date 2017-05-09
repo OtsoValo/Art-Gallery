@@ -10,5 +10,6 @@ export default {
 	DELETE_PAINTING_SUCC: '删除画作成功',
 	DELETE_ARTIST_FAIL: '删除艺术家失败，请重新尝试',
 	DELETE_PAINTING_FAIL: '删除画作失败，请重新尝试',
-	NO_RIGHT: '操作无权限，请刷新重新登录'
+	NO_RIGHT: '操作无权限，请刷新重新登录',
+	FORM_FALSE: '表单尚未完整，请填写完全'
 };

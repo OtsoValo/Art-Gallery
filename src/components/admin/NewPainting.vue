@@ -86,10 +86,10 @@
 			</Form-item>
 		</Form>
 		<div class="w-display">
-			<Icon class="u-camera"
+			<!--<Icon class="u-camera"
 			      type="image"
 			      v-show="painting.im === ''"
-			      size="40"></Icon>
+			      size="40"></Icon>-->
 			<img :src="painting.im"
 			     v-show="painting.im">
 		</div>
@@ -136,6 +136,10 @@ export default {
 			this.painting.imMin = res.minData;
 		},
 		savePainting() {
+			if(this.painting.name === '' || this.painting.im === '' || this.painting.author === ''){
+				this.$Notice.warning({ title: TIPS.FORM_FALSE });
+				return;
+			}
 			let paintingData = _.cloneDeep(this.painting);
 			paintingData.aid = (_.find(this.artists, a => { return a.name === paintingData.author; })).id;
 			paintingData.voiceSpeed = paintingData.voiceSpeed / 10;

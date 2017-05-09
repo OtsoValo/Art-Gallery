@@ -74,10 +74,10 @@
 		</Form>
 	
 		<div class="w-display">
-			<Icon class="u-camera"
+			<!--<Icon class="u-camera"
 			      type="image"
 			      v-show="artist.im === ''"
-			      size="40"></Icon>
+			      size="40"></Icon>-->
 			<img :src="artist.im" v-show="artist.im">
 		</div>
 	</div>
@@ -132,6 +132,10 @@ export default {
 			}
 		},
 		saveArtist() {
+			if(this.artist.name === '' || this.artist.im === ''){
+				this.$Notice.warning({ title: TIPS.FORM_FALSE });
+				return;
+			}
 			let artistData = _.cloneDeep(this.artist);
 			let comma = artistData.works.includes(',') ? ',' : '，';
 			artistData.works = artistData.works.split(comma);

@@ -15,32 +15,43 @@
 				</Carousel-item>
 			</Carousel>
 	
-			<div class="ctrl-carousel" :class="{'ctrl-carousel-hide': ctrl.hide}">
+			<div class="ctrl-carousel"
+			     :class="{'ctrl-carousel-hide': ctrl.hide}">
 				<Button class="ctrl-btn"
 				        type="ghost"
 				        shape="circle"
-						size="large"
-						@click="ctrl.hide = !ctrl.hide"
+				        size="large"
+				        @click="ctrl.hide = !ctrl.hide"
 				        icon="ios-analytics"></Button>
 				<Form :label-width="60">
 					<Form-item class="w-ctrlform"
-					           label="(￣３￣)">
+					           label="(￣１￣)">
 						<Slider class="w-slider"
 						        v-model="ctrl.size"
 						        :min="30"
 						        :max="90"
-								show-stops
+						        show-stops
 						        :tip-format="formatSizeTips"
+						        :step="10"></Slider>
+					</Form-item>
+					<Form-item class="w-ctrlform"
+					           label="(￣２￣)">
+						<Slider class="w-slider"
+						        v-model="ctrl.speed"
+						        :min="20"
+						        :max="100"
+						        show-stops
+						        :tip-format="formatSpeedTips"
 						        :step="10"></Slider>
 					</Form-item>
 					<Form-item class="w-ctrlform"
 					           label="(￣３￣)">
 						<Slider class="w-slider"
-						        v-model="ctrl.speed"
-						        :min="20"
-						        :max="100"
-								show-stops
-						        :tip-format="formatSpeedTips"
+						        v-model="ctrl.pageSize"
+						        :min="10"
+						        :max="60"
+						        show-stops
+						        :tip-format="formatPageSizeTips"
 						        :step="10"></Slider>
 					</Form-item>
 				</Form>
@@ -183,6 +194,7 @@
 				</Row>
 			</div>
 		</Modal>
+	
 		<!--删除确认弹窗-->
 		<Modal v-model="deleteModal"
 		       width="360">
@@ -228,7 +240,7 @@ export default {
 			thumbAry: [],
 			paintingModal: false,
 			modalData: {
-				name: '默认背景音频',
+				name: '暂无',
 				size: {},
 				descr: '',
 				voice: '/view/audio?fn=stone_road'
@@ -240,6 +252,7 @@ export default {
 			ctrl: {
 				size: 60,
 				speed: 40,
+				pageSize: 30,
 				hide: true
 			}
 		};
@@ -260,12 +273,8 @@ export default {
 		'paintingModal': function (modal_open) {
 			if (!modal_open) {
 				this.$refs.audioPlayer.pause();
-				this.modalData = {
-					name: '默认背景音频',
-					size: {},
-					descr: '',
-					voice: '/view/audio?fn=stone_road'
-				};
+				this.modalData.name = '暂无';
+				this.modalData.voice = '/view/audio?fn=stone_road';
 			}
 		},
 		'ctrl.size': function (val) {
@@ -276,17 +285,24 @@ export default {
 		},
 		'ctrl.speed': function (val) {
 			this.carouselSpeed = val * 100;
+		},
+		'ctrl.pageSize': function (val) {
+			this.pageSize = val;
+			this.changePage(1);
 		}
 	},
 	methods: {
 		formatSizeTips(val) {
-			return `总共轮播${val / 10}幅`;
+			return `轮播总共展示${val / 10}幅`;
 		},
 		formatSpeedTips(val) {
 			return `轮播速度每${val / 10}秒一幅`;
 		},
+		formatPageSizeTips(val) {
+			return `小图每页展示${val}幅`;
+		},
 		changePage(page) {
-			this.page = page;
+			this.page = page || this.page;
 			// 获取缩略图
 			this.$http.get(`/view/thumbnailList?page=${page}&pageSize=${this.pageSize}`).then(res => {
 				this.totalSize = res.data.total;
@@ -302,7 +318,9 @@ export default {
 				const outerWidth = 40;
 				const modalIm = document.getElementById('modal-im');
 				modalIm.onload = () => {
-					this.modalWidth = modalIm.width + outerWidth;
+					let tw = modalIm.width;
+					if (tw < 640) tw = 640;
+					this.modalWidth = tw + outerWidth;
 				};
 				// 防止图片宽度为0时溢出，这个奇怪的bug哈
 				const imWidth = modalIm.width === 0 ? 1200 : modalIm.width;
@@ -394,7 +412,7 @@ $bouceInOut: cubic-bezier(0.68, -0.55, 0.27, 1.55);
 			right: -40px;
 			bottom: 20px; // border: 1px solid #39f;
 			box-shadow: 0 0 8px #888;
-			border-radius: 42px 0 0 42px;
+			border-radius: 60px 0 0 60px;
 			transition: right .3s #{$bouceInOut};
 			.w-ctrlform {
 				margin-bottom: 0;
