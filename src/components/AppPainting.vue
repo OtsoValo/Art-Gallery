@@ -287,8 +287,8 @@ export default {
 			this.carouselSpeed = val * 100;
 		},
 		'ctrl.pageSize': function (val) {
-			this.pageSize = val;
 			this.changePage(1);
+			this.pageSize = val;
 		}
 	},
 	methods: {

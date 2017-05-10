@@ -157,6 +157,7 @@
 </template>
 
 <script>
+import hash from 'object-hash';
 export default {
 	data() {
 		return {
@@ -196,6 +197,8 @@ export default {
 			const registData = _.cloneDeep(this.regist);
 			this.regist.loading = true;
 			delete registData.loading;
+			// 将密码进行sha1加密
+			registData.pwd = hash.sha1(registData.pwd);
 			this.$http.post('/view/regist', registData).then(res => {
 				if (res.data.code === 200) {
 					this.$Notice.success({
@@ -215,6 +218,8 @@ export default {
 			const loginData = _.cloneDeep(this.login);
 			this.login.loading = true;
 			delete loginData.loading;
+			// 将密码进行sha1加密
+			loginData.pwd = hash.sha1(loginData.pwd);
 			this.$http.post('/view/login', loginData).then(res => {
 				const resd = res.data;
 				if (resd.code === 200) {
@@ -306,7 +311,7 @@ export default {
 	}
 	.app-view {
 		padding: 60px 0 36px;
-		overflow: auto;
+		overflow: hidden;
 	}
 	.power-admin {
 		float: right;
