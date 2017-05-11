@@ -2,10 +2,27 @@
  * 基本路由（游客和登录用户）
  */
 const baseRouter = require('express').Router();
+const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 const models = require('./models');
 const CODE = require('./code');
+
+// 返回上传图片路径
+baseRouter.get('/view/uploadImg', (req, res) => {
+	const fileName = req.query.file;
+	let filePath = path.resolve(__dirname, '../static/uploads/', fileName);
+	fs.access(filePath, err => {
+		if (err) { filePath = path.resolve(__dirname, '../static/backup/anonymous.jpg') };
+		res.sendFile(filePath);
+	});
+});
+
+// 单首音频文件
+baseRouter.get('/view/audio', (req, res) => {
+	const fn = req.query.fn;
+	res.sendFile(path.resolve(__dirname, '../static/voice/', `${fn}.mp3`));
+})
 
 // 单张缩略图
 baseRouter.get('/view/thumbnail', (req, res) => {
@@ -18,12 +35,6 @@ baseRouter.get('/view/painting', (req, res) => {
 	const id = req.query.id;
 	res.sendFile(path.resolve(__dirname, '../static/paintings/', `${id}.jpg`));
 });
-
-// 单首音频文件
-baseRouter.get('/view/audio', (req, res) => {
-	const fn = req.query.fn;
-	res.sendFile(path.resolve(__dirname, '../static/voice/', `${fn}.mp3`));
-})
 
 // 轮播使用
 baseRouter.get('/view/paintingList', (req, res) => {

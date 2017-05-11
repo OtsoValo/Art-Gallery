@@ -57,16 +57,6 @@ userRouter.post('/view/user/fileUpload/artist', upload.single('artist'), (req, r
 	});
 });
 
-// 返回上传图片路径
-userRouter.get('/view/uploadImg', (req, res) => {
-	const fileName = req.query.file;
-	let filePath = path.resolve(__dirname, '../static/uploads/', fileName);
-	fs.access(filePath, err => {
-		if (err) { filePath = path.resolve(__dirname, '../static/backup/anonymous.jpg') };
-		res.sendFile(filePath);
-	});
-});
-
 // 语音生成
 function makeVoiceText(vod) {
 	return `画作《${vod.name}》由艺术家${vod.author}于${new Date(vod.begin).getFullYear()}年到${new Date(vod.end).getFullYear()}年创作。艺术创作风格为${vod.style}，尺寸${vod.size.width}乘以${vod.size.height}${vod.size.rule}，现收藏于${vod.site}······

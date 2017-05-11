@@ -53,7 +53,7 @@ export default {
 		return {
 			audio: {
 				playing: false,
-				mini: true
+				mini: false
 			}
 		}
 	},
