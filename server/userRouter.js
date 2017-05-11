@@ -11,6 +11,7 @@ const images = require('images');
 const generateVoice = require('./voiceFactory');
 const models = require('./models');
 const CODE = require('./code');
+const API = require('./api');
 
 const MIN_QUAL = 80;
 const MIN_WIDTH = 300;
@@ -28,7 +29,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // 接收画作图片上传并实现压缩制作缩略图
-userRouter.post('/view/user/fileUpload/painting', upload.single('painting'), (req, res) => {
+userRouter.post(API.PAINTING_IMG_UPLOAD, upload.single('painting'), (req, res) => {
 	const fileName = req.file.filename;
 	const filePath = req.file.path;
 	const affix = /\.[^\.]+$/.exec(fileName)[0];
@@ -43,7 +44,7 @@ userRouter.post('/view/user/fileUpload/painting', upload.single('painting'), (re
 });
 
 // 接收艺术家图片上传并实现压缩制作缩略图
-userRouter.post('/view/user/fileUpload/artist', upload.single('artist'), (req, res) => {
+userRouter.post(API.ARTIST_IMG_UPLOAD, upload.single('artist'), (req, res) => {
 	const fileName = req.file.filename;
 	const filePath = req.file.path;
 	const affix = /\.[^\.]+$/.exec(fileName)[0];
@@ -64,7 +65,7 @@ function makeVoiceText(vod) {
 }
 
 // 存入画作
-userRouter.post('/view/user/newPainting', (req, res) => {
+userRouter.post(API.NEW_PAINTING, (req, res) => {
 	const voiceSpeed = req.body.voiceSpeed;
 	const voiceName = (_.values(querystring.parse(req.body.im))[0]).split('.')[0];
 	const voiceText = makeVoiceText(req.body);
@@ -90,7 +91,7 @@ userRouter.post('/view/user/newPainting', (req, res) => {
 });
 
 // 存入艺术家
-userRouter.post('/view/user/newArtist', (req, res) => {
+userRouter.post(API.NEW_ARTIST, (req, res) => {
 	const oneArtist = new models.Artist(req.body);
 	oneArtist.save((err, artist) => {
 		if (err) {
@@ -108,7 +109,7 @@ userRouter.post('/view/user/newArtist', (req, res) => {
 });
 
 // 修改艺术家
-userRouter.patch('/view/user/editArtist', (req, res) => {
+userRouter.patch(API.EDIT_ARTIST, (req, res) => {
 	const theArtist = req.body;
 	const aid = theArtist._id;
 	models.Artist.update({ _id: aid }, theArtist, (err) => {
@@ -125,7 +126,7 @@ userRouter.patch('/view/user/editArtist', (req, res) => {
 });
 
 // 修改画作
-userRouter.patch('/view/user/editPainting', (req, res) => {
+userRouter.patch(API.EDIT_PAINTING, (req, res) => {
 	const voiceSpeed = req.body.voiceSpeed;
 	const voiceName = (_.values(querystring.parse(req.body.im))[0]).split('.')[0];
 	const voiceText = makeVoiceText(req.body);
@@ -162,7 +163,7 @@ function deleteLocalFile(query_im, query_imMin, delete_voice = false) {
 }
 
 // 删除某个艺术家，及其对应的所有画作及其图片
-userRouter.delete('/view/user/deleteArtist', (req, res) => {
+userRouter.delete(API.DELETE_ARTIST, (req, res) => {
 	const aid = req.query.aid;
 	deleteLocalFile(req.query.im, req.query.imMin);
 	models.Artist.findByIdAndRemove({ _id: aid }, (err) => {
@@ -192,7 +193,7 @@ userRouter.delete('/view/user/deleteArtist', (req, res) => {
 });
 
 // 删除某幅画作以及其图片
-userRouter.delete('/view/user/deletePainting', (req, res) => {
+userRouter.delete(API.DELETE_PAITING, (req, res) => {
 	const pid = req.query.pid;
 	deleteLocalFile(req.query.im, req.query.imMin, true);
 	models.Painting.findByIdAndRemove({ _id: pid }, (err) => {

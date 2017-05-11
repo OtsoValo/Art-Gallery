@@ -13,10 +13,10 @@
 				<Icon type="beer"></Icon>
 				艺术家展厅
 			</Menu-item>
-			<Menu-item name="style">
+			<!--<Menu-item name="style">
 				<Icon type="pizza"></Icon>
 				风格拼图
-			</Menu-item>
+			</Menu-item>-->
 			<Menu-item name="explore">
 				<Icon type="ios-infinite"></Icon>
 				无尽探索
@@ -39,7 +39,7 @@
 					           disabled>编辑某幅画作</Menu-item>
 				</Menu-group>
 			</Submenu>
-	
+
 			<div class="power-admin">
 				<Poptip trigger="hover"
 				        placement="bottom"
@@ -59,7 +59,7 @@
 				     alt="LOGO">
 			</div>
 		</Menu>
-	
+
 		<!--登录弹窗-->
 		<Modal v-model="loginModal"
 		       width="360">
@@ -71,13 +71,13 @@
 			<div style="text-align:center">
 				<Input v-model="login.account"
 				       size="large">
-				<span slot="prepend">账号</span>
+				  <span slot="prepend">账号</span>
 				</Input>
 				<br/>
 				<Input v-model="login.pwd"
 				       type="password"
 				       size="large">
-				<span slot="prepend">密码</span>
+				  <span slot="prepend">密码</span>
 				</Input>
 			</div>
 			<div slot="footer">
@@ -88,7 +88,7 @@
 				        @click="doLogin">确认</Button>
 			</div>
 		</Modal>
-	
+
 		<!--注册弹窗-->
 		<Modal v-model="registModal"
 		       width="360">
@@ -122,7 +122,7 @@
 				        @click="doRegist">确认</Button>
 			</div>
 		</Modal>
-	
+
 		<!--登出弹窗-->
 		<Modal v-model="logoutModal"
 		       width="360">
@@ -143,11 +143,11 @@
 				        @click="doLogout">登出</Button>
 			</div>
 		</Modal>
-	
+
 		<div class="app-view">
 			<router-view></router-view>
 		</div>
-	
+
 		<footer class="glabal-copyright">
 			<p>Copyright &copy;2017-2018 <a href="https://github.com/Gotjoy/Art-Gallery">https://github.com/Gotjoy/Art-Gallery</a>. All Rights Reserved.</p>
 		</footer>

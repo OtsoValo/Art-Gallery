@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
-// 暂不做用户登录权限
+// 用户模型
 const UserSchema = mongoose.Schema({
 	account: String,
 	pwd: String,
 	email: String
 });
 
-// 艺术家
+// 艺术家模型
 const ArtistSchema = mongoose.Schema({
 	name: String,
 	im: String,
@@ -18,11 +18,10 @@ const ArtistSchema = mongoose.Schema({
 	bigStories: [
 		{ time: String, content: String }
 	],
-	// 该艺术家作品的id集合
 	works: Array
 });
 
-// 绘画
+// 绘画模型
 const PaintingSchema = mongoose.Schema({
 	name: String,
 	im: String,

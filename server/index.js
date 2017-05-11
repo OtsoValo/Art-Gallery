@@ -4,6 +4,7 @@ const _ = require('lodash');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const CODE = require('./code');
+const API = require('./api');
 
 // 数据库处理
 const dbsv = require('./dbsv');
@@ -65,11 +66,11 @@ function requireAuthen(req, res, next) {
 		});
 	}
 }
-app.get('/view/meet', loadUser);
-app.all('/view/user/*', requireAuthen);
+app.get(API.BASE_CHECK_LOGIN, loadUser);
+app.all(API.USER_ALL, requireAuthen);
 
 // 来来来用户注册
-app.post('/view/regist', (req, res) => {
+app.post(API.BASE_REGIST, (req, res) => {
 	const ud = _.cloneDeep(req.body);
 	ud.pwd = authen.cryptPwd(ud.pwd);
 	new models.User(ud).save((err, user) => {
@@ -91,7 +92,7 @@ app.post('/view/regist', (req, res) => {
 });
 
 // 来来来用户登录
-app.post('/view/login', (req, res) => {
+app.post(API.BASE_LOGIN, (req, res) => {
 	const account = req.body.account;
 	const pwd = req.body.pwd;
 	// 检查用户账号和密码是否和数据库中相匹配
@@ -125,7 +126,7 @@ app.post('/view/login', (req, res) => {
 });
 
 // 来来来用户登出
-app.post('/view/logout', (req, res) => {
+app.post(API.BASE_LOGOUT, (req, res) => {
 	req.session.destroy(err => {
 		if (err) {
 			res.json({

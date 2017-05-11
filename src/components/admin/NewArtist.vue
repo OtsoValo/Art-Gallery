@@ -35,7 +35,7 @@
 				<Input placeholder="可以参考百度百科或者维基百科嘛..."
 				       type="textarea"
 				       :rows="4"
-				       style="width: 400px"
+				       style="width: 800px"
 				       v-model="artist.intro"></Input>
 			</Form-item>
 			<Form-item label="生平大事记">
