@@ -17,7 +17,7 @@ function collectQs(voiceText, speed) {
 	});
 }
 function generateVoice(voiceText = '', fileName = `demo-${Date.now()}.mp3`, speed = 4) {
-	// 文本过长时需截断后多次请求后再拼接，暂定每次转换500个字符
+	// 文本过长时需截断后多次请求后再拼接，暂定每次转换300个字符
 	const times = Math.ceil(voiceText.length / SIZE);
 	const voicePath = path.resolve(__dirname, '../static/voice', fileName);
 	function splitTextBySize(times, size, wrapper) {

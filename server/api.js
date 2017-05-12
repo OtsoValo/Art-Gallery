@@ -1,5 +1,5 @@
 /**
- * HTTP路由，对应所有操作数据库的逻辑
+ * HTTP API接口，对应所有操作数据库的逻辑
  */
 
 module.exports = {

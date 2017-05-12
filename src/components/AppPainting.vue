@@ -14,7 +14,7 @@
 					</div>
 				</Carousel-item>
 			</Carousel>
-
+	
 			<div class="ctrl-carousel"
 			     :class="{'ctrl-carousel-hide': ctrl.hide}">
 				<Button class="ctrl-btn"
@@ -57,7 +57,7 @@
 				</Form>
 			</div>
 		</header>
-
+	
 		<!--分割线-->
 		<section class="m-divider">
 			<Steps class="w-steps"
@@ -73,7 +73,7 @@
 				      content="删除某艺术家及对应所有画作，小心操作哦！"></Step>
 			</Steps>
 		</section>
-
+	
 		<!--缩略图-->
 		<section class="m-stage">
 			<div class="w-thumb"
@@ -84,16 +84,17 @@
 				     alt="缩略图">
 			</div>
 		</section>
-
+	
 		<!--分页-->
 		<section class="m-paginbox">
 			<Page class="w-pagin"
+			      :current="page"
 			      :page-size="pageSize"
 			      :total="totalSize"
 			      show-total
 			      @on-change="changePage"></Page>
 		</section>
-
+	
 		<!--单幅画作的详细信息-->
 		<Modal v-model="paintingModal"
 		       class="w-modal"
@@ -194,7 +195,7 @@
 				</Row>
 			</div>
 		</Modal>
-
+	
 		<!--删除确认弹窗-->
 		<Modal v-model="deleteModal"
 		       width="360">
@@ -215,7 +216,7 @@
 				        @click="deletePainting">删除</Button>
 			</div>
 		</Modal>
-
+	
 		<AudioPlayer ref="audioPlayer"
 		             class="m-audioplayer"
 		             :audio-src="modalData.voice"
@@ -287,8 +288,8 @@ export default {
 			this.carouselSpeed = val * 100;
 		},
 		'ctrl.pageSize': function (val) {
-			this.changePage(1);
 			this.pageSize = val;
+			this.changePage(1);
 		}
 	},
 	methods: {
@@ -443,8 +444,17 @@ $bouceInOut: cubic-bezier(0.68, -0.55, 0.27, 1.55);
 		justify-content: center;
 		max-width: 1920px;
 		min-width: 1000px;
-		margin: 0 auto;
-		padding-top: 10px;
+		margin: 10px auto;
+		padding: {
+			top: 10px;
+			bottom: 10px;
+		}
+		background: #f9f9f9;
+		border: {
+			top: 1px solid #eee;
+			bottom: 1px solid #eee;
+		}
+
 		.w-thumb {
 			position: relative;
 			height: 120px;
