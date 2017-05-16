@@ -14,7 +14,7 @@ baseRouter.get(API.GET_IMG, (req, res) => {
 	const fileName = req.query.file;
 	let filePath = path.resolve(__dirname, '../static/uploads/', fileName);
 	fs.access(filePath, err => {
-		if (err) { filePath = path.resolve(__dirname, '../static/backup/anonymous.jpg') };
+		if (err) filePath = path.resolve(__dirname, '../static/backup/anonymous.jpg');
 		res.sendFile(filePath);
 	});
 });
@@ -22,7 +22,11 @@ baseRouter.get(API.GET_IMG, (req, res) => {
 // 单首音频文件
 baseRouter.get(API.GET_AUDIO, (req, res) => {
 	const fn = req.query.fn;
-	res.sendFile(path.resolve(__dirname, '../static/voice/', `${fn}.mp3`));
+	let fnPath = path.resolve(__dirname, '../static/voice/', `${fn}.mp3`);
+	fs.access(fnPath, err => {
+		if(err) fnPath = path.resolve(__dirname, '../static/voice/stone_road.mp3');
+		res.sendFile(fnPath);
+	});
 })
 
 // 单张缩略图

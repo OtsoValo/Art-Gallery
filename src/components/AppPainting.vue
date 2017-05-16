@@ -25,7 +25,7 @@
 				        icon="ios-analytics"></Button>
 				<Form :label-width="60">
 					<Form-item class="w-ctrlform"
-					           label="(￣１￣)">
+					           label="轮播数量">
 						<Slider class="w-slider"
 						        v-model="ctrl.size"
 						        :min="30"
@@ -35,7 +35,7 @@
 						        :step="10"></Slider>
 					</Form-item>
 					<Form-item class="w-ctrlform"
-					           label="(￣２￣)">
+					           label="切帧速度">
 						<Slider class="w-slider"
 						        v-model="ctrl.speed"
 						        :min="20"
@@ -45,7 +45,7 @@
 						        :step="10"></Slider>
 					</Form-item>
 					<Form-item class="w-ctrlform"
-					           label="(￣３￣)">
+					           label="单页总量">
 						<Slider class="w-slider"
 						        v-model="ctrl.pageSize"
 						        :min="10"

@@ -35,14 +35,17 @@ function generateVoice(voiceText = '', fileName = `demo-${Date.now()}.mp3`, spee
 	const allBufRaw = [];
 	for (let i = 0; i < times; i++) {
 		promiseList.push(new Promise((resolve, reject) => {
-			let tempAry = []
+			let tempAry = [];
 			request(`http://tts.baidu.com/text2audio?${qsAry[i]}`).on('data', chunk => {
 				tempAry.push(chunk);
-			}).on('end', err => {
+			}).on('end', () => {
 				allBufRaw.push({
 					index: i,
 					data: Buffer.concat(tempAry)
 				});
+				resolve();
+			}).on('error', err => {
+				if(err) console.log(err);
 				resolve();
 			});
 		}));

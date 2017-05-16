@@ -154,11 +154,20 @@ function deleteLocalFile(query_im, query_imMin, delete_voice = false) {
 	const imMin_name = _.values(querystring.parse(decodeURIComponent(query_imMin)))[0];
 	const im_path = path.resolve(__dirname, '../static/uploads/', im_name);
 	const imMin_path = path.resolve(__dirname, '../static/uploads/', imMin_name);
-	fs.unlink(im_path);
-	fs.unlink(imMin_path);
+	fs.access(im_path, err => {
+		if(err) console.error(err);
+		else fs.unlink(im_path);
+	});
+	fs.access(imMin_path, err => {
+		if(err) console.error(err);
+		else fs.unlink(imMin_path);
+	});
 	if (delete_voice) {
 		const voice_path = path.resolve(__dirname, '../static/voice/', im_name.split('.')[0] + '.mp3');
-		fs.unlink(voice_path);
+		fs.stat(voice_path, (err, stats) => {
+			if(err) console.error(err);
+			else fs.unlink(voice_path);
+		});
 	}
 }
 
